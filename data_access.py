@@ -43,6 +43,9 @@ class ImageDaoCustom:
         self.valid_split = valid_split
         self.batch_size = batch_size
 
+        self.load_data()
+
+
     def load_data(self):
         self.data, self.labels = self.load_data_from_path(self.data_path)
 
@@ -76,7 +79,9 @@ class ImageDaoCustom:
 class DataExtractor:
     def __init__(self, data_path):
         self.data_path = data_path
+
         self.extract_zip(data_path)
+
 
     def extract_zip(self, zip_path):
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
