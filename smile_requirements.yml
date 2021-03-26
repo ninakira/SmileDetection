@@ -1,0 +1,11 @@
+name: SmileEnvironment
+dependencies:
+    - numpy
+    - pandas
+    - tensorflow
+    - keras=2.4.3
+    - matplotlib
+    - opencv
+    - dlib
+    - albumentations
+    - scikit-learn
