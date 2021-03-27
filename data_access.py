@@ -7,21 +7,31 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split
 
 class ImageDaoKeras:
-    def __init__(self, data_path, height=224, width=224, valid_split=0.25, batch_size=128, color_format="rgb"):
-        self.data_path = data_path
+    def __init__(self, data_path=None,
+                 train_path=None,
+                 validation_path=None,
+                 height=224,
+                 width=224,
+                 valid_split=0.25,
+                 batch_size=128,
+                 color_format="rgb"):
         self.IMG_HEIGHT = height
         self.IMG_WIDTH = width
         self.valid_split = valid_split
         self.color_format = color_format
         self.batch_size = batch_size
 
-        self.train_dataset = self.load_data_keras("training")
-        self.valid_dataset = self.load_data_keras("validation")
+        if data_path is not None:
+            self.train_dataset = self.load_data_keras(data_path, "training", valid_split=self.valid_split)
+            self.valid_dataset = self.load_data_keras(data_path, "validation", valid_split=self.valid_split)
+        else:
+            self.train_dataset = self.load_data_keras(train_path)
+            self.valid_dataset = self.load_data_keras(validation_path)
 
 
-    def load_data_keras(self, subset_type):
+    def load_data_keras(self, data_path, subset_type=None, valid_split=None):
         return tf.keras.preprocessing.image_dataset_from_directory(
-            self.data_path,
+            data_path,
             labels="inferred",
             label_mode="binary",
             color_mode=self.color_format,
@@ -29,7 +39,7 @@ class ImageDaoKeras:
             image_size=(self.IMG_HEIGHT, self.IMG_WIDTH),
             shuffle=True,
             seed=42,
-            validation_split=self.valid_split,
+            validation_split=valid_split,
             subset=subset_type,
             interpolation="bilinear",
             follow_links=False,
