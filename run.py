@@ -1,10 +1,13 @@
+import sys
 from data_access import ImageDaoKeras
 from model_training import KerasTrain
 from models.VGG_Face import VGG_Face
 from models.BKNet import BKNet
 
 
-def train_vgg_face():
+def train_vgg_face(data_path):
+    assert data_path is not None
+
     dao_single_path = ImageDaoKeras(data_path="images/train")
     vgg_model = VGG_Face(dao_single_path).model
     trainer = KerasTrain(model=vgg_model,
@@ -30,14 +33,14 @@ def train_bknet():
     trainer.fit_model()
 
 
-def main():
-    print("Hey you! Smile!")
+def main(argv):
+    print("Hey you! Smile!", argv)
     # dao_single_path = ImageDaoKeras(data_path="images/train")
     # dao_separate_paths = ImageDaoKeras(train_path="images/train", validation_path="images/test")
 
-    train_vgg_face()
+    train_vgg_face(argv[0])
     # train_bknet()
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

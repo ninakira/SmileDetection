@@ -23,7 +23,7 @@ class KerasTrain:
                  cp_dir="checkpoints/",
                  with_tensorboard=True,
                  tb_dir="tf_logs/",
-                 tb_hist_freq=10):
+                 tb_hist_freq=30):
         self.model = model
         self.name = name
         self.description = description
@@ -72,12 +72,14 @@ class KerasTrain:
             callbacks.append(self.__get_tb_callback())
         if self.with_cp_save:
             callbacks.append(self.__get_cp_callback())
+
         history = self.model.fit(
             self.train_data,
             validation_data=self.valid_data,
             epochs=self.epochs,
             callbacks=callbacks
         )
+
         self.histories.append(history)
         self.__save_model(self.current_fit)
         self.current_fit += 1
@@ -107,3 +109,10 @@ class KerasTrain:
 
     def get_tensorlog_path(self):
         return self.tb_dir
+
+def get_exp_scheduler(initial_learning_rate = 0.005, decay_rt = 0.96, decay_step = 100):
+    return tf.keras.optimizers.schedules.ExponentialDecay(
+        initial_learning_rate,
+        decay_steps=decay_step,
+        decay_rate=decay_rt,
+        staircase=True)
