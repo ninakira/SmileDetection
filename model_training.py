@@ -86,7 +86,7 @@ class KerasTrain:
 
 
     def __save_model(self, fit_n):
-        self.model.save(self.save_path + "SavedModel/" + fit_n)
+        self.model.save(self.save_path + "SavedModel/{}".format(fit_n))
 
 
     def __get_cp_callback(self):
