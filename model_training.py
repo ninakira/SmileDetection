@@ -52,7 +52,6 @@ class KerasTrain:
 
         self.__compile_model()
         self.current_fit = 0
-        self.fit_model()
 
 
     def __compile_model(self):
