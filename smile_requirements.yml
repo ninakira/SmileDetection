@@ -1,4 +1,4 @@
-name: SmileEnvironment
+name: SmileEnvironment2
 dependencies:
     - numpy
 #    - pandas
