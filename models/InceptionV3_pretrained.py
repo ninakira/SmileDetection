@@ -41,7 +41,7 @@ class InceptionV3_Pretrained:
         for layer in bottleneck_model.layers:
             layer.trainable = False
         
-        prediction_layer = Dense(2, activation='softmax')
+        prediction_layer = Dense(1)
         
         inputs =  Input(shape=(dataset.IMG_HEIGHT, dataset.IMG_WIDTH, 3))
         x = data_augmentation(inputs)
