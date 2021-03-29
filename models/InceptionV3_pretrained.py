@@ -34,7 +34,7 @@ class InceptionV3_Pretrained:
         
         original_model    = inception_v3.InceptionV3()
         bottleneck_input  = original_model.get_layer(index=0).input
-        bottleneck_output = original_model.get_layer(index=41).output
+        bottleneck_output = original_model.get_layer(index=-2).output
         bottleneck_model  = Model(inputs=bottleneck_input,           
                                   outputs=bottleneck_output)
         
