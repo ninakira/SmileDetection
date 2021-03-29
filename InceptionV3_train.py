@@ -9,15 +9,14 @@ Created on Tue Mar 30 01:04:19 2021
 import sys
 from data_access import ImageDaoKeras
 from model_training import KerasTrain, get_exp_scheduler
-from models.InceptionV3_pretrained import InceptionV3_pretrained
-
+from models.InceptionV3_pretrained import InceptionV3_Pretrained
 
 def train_InceptionV3(data_path):
     assert data_path is not None
 
     dao_single_path = ImageDaoKeras(data_path=data_path)
 
-    model = InceptionV3_pretrained(dao_single_path).model
+    model = InceptionV3_Pretrained(dao_single_path).model
     lr_scheduler = get_exp_scheduler(decay_step=1000)
 
     trainer = KerasTrain(model=model,
