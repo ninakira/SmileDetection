@@ -1,48 +1,61 @@
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Input, Activation, InputLayer, Flatten, Input, Convolution2D, ZeroPadding2D, MaxPooling2D
 
 
-class VGG_Face:
-    def __init__(self,
-                 dataset=None):
+class VGGFace:
+    def __init__(self):
         """
         VGG16 model with pretrained weight on face dataset.
-
-        :param dataset: ImageDaoKeras or ImageDaoCustom object
         """
-        assert dataset is not None
+        model = Sequential()
+        model.add(ZeroPadding2D((1, 1), input_shape=(224, 224, 3)))
+        model.add(Convolution2D(64, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(64, (3, 3), activation='relu'))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-        base_model = tf.keras.applications.VGG16(input_shape=(dataset.IMG_HEIGHT, dataset.IMG_WIDTH, 3),
-                                                 include_top=False,
-                                                 weights='imagenet')
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(128, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(128, (3, 3), activation='relu'))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-        data_augmentation = keras.Sequential(
-            [
-                layers.experimental.preprocessing.RandomFlip("horizontal",
-                                                             input_shape=(dataset.IMG_HEIGHT, dataset.IMG_WIDTH, 3)),
-                layers.experimental.preprocessing.RandomRotation(0.15),
-                layers.experimental.preprocessing.RandomZoom(0.1),
-            ]
-        )
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(256, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(256, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(256, (3, 3), activation='relu'))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-        preprocess_input = tf.keras.applications.vgg16.preprocess_input
-        global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
-        prediction_layer = tf.keras.layers.Dense(1)
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(512, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(512, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(512, (3, 3), activation='relu'))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-        # freeze vgg
-        base_model.trainable = False
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(512, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(512, (3, 3), activation='relu'))
+        model.add(ZeroPadding2D((1, 1)))
+        model.add(Convolution2D(512, (3, 3), activation='relu'))
+        model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-        inputs = tf.keras.Input(shape=(dataset.IMG_HEIGHT, dataset.IMG_WIDTH, 3))
-        x = data_augmentation(inputs)
-        x = preprocess_input(x)
-        x = base_model(x, training=False)
-        x = global_average_layer(x)
-        x = tf.keras.layers.Dropout(0.2)(x)
-        outputs = prediction_layer(x)
+        model.add(Convolution2D(4096, (7, 7), activation='relu'))
+        model.add(Dropout(0.5))
+        model.add(Convolution2D(4096, (1, 1), activation='relu'))
+        model.add(Dropout(0.5))
+        model.add(Convolution2D(2622, (1, 1)))
+        model.add(Flatten())
+        model.add(Activation('softmax'))
 
-        self.model = tf.keras.Model(inputs, outputs)
+        model.load_weights('../pretrained_weights/vgg_face_weights.h5')
+        model.pop()
+        model.add(Dense(1))
+        for layer in model.layers[:-1]:
+            layer.trainable = False
 
-
-    def get_model(self):
-        return self.model
+        self.model = model

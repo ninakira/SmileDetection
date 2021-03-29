@@ -2,6 +2,7 @@ import datetime
 import os
 import tensorflow as tf
 
+
 class KerasTrain:
     def __init__(self, model=None,
                  name=None,
@@ -17,6 +18,8 @@ class KerasTrain:
                  optimizer=None,
                  loss=None,
                  metrics=["accuracy"],
+                 with_early_stop=True,
+                 early_stop_patience=8,
                  save_path="../SavedModels/",
                  with_cp_save=True,
                  cp_freq=20,
@@ -38,6 +41,8 @@ class KerasTrain:
         self.optimizer = optimizer
         self.loss = loss
         self.metrics = metrics
+        self.with_early_stop = with_early_stop
+        self.early_stop_patience = early_stop_patience
 
         self.save_path = save_path + self.name + "/"
         self.with_cp_save = with_cp_save
@@ -53,7 +58,6 @@ class KerasTrain:
         self.__compile_model()
         self.current_fit = 0
 
-
     def __compile_model(self):
         optimizer = self.optimizer if self.optimizer is not None \
             else (tf.keras.optimizers.Adam(learning_rate=self.lr_scheduler) if self.lr_scheduler is not None
@@ -65,13 +69,14 @@ class KerasTrain:
                            loss=loss,
                            metrics=self.metrics)
 
-
     def fit_model(self):
         callbacks = []
         if self.with_tensorboard:
             callbacks.append(self.__get_tb_callback())
         if self.with_cp_save:
             callbacks.append(self.__get_cp_callback())
+        if self.with_early_stop:
+            callbacks.append(self.__get_early_stop_callback())
 
         history = self.model.fit(
             self.train_data,
@@ -85,10 +90,13 @@ class KerasTrain:
         self.current_fit += 1
         self.current_epoch += self.epochs
 
-
     def __save_model(self, fit_n):
         self.model.save(self.save_path + "SavedModel/{}".format(fit_n))
 
+    def __get_early_stop_callback(self):
+        return tf.keras.callbacks.EarlyStopping(monitor='val_loss',
+                                                patience=self.early_stop_patience,
+                                                restore_best_weights=True)
 
     def __get_cp_callback(self):
         checkpoint_path = self.cp_dir + "cp-{epoch:04d}.ckpt"
@@ -99,13 +107,11 @@ class KerasTrain:
             filepath=checkpoint_dir,
             verbose=1,
             save_weights_only=True,
-            save_freq=self.cp_freq*self.batch_size)
-
+            save_freq=self.cp_freq * self.batch_size)
 
     def __get_tb_callback(self):
         logdir = os.path.join(self.tb_dir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
         return tf.keras.callbacks.TensorBoard(logdir, histogram_freq=self.tb_hist_freq)
-
 
     def get_tensorlog_path(self):
         return self.tb_dir
