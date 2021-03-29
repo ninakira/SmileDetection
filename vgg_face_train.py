@@ -10,10 +10,10 @@ def train_vgg_face(data_path):
     dao_single_path = ImageDaoKeras(data_path=data_path)
 
     vgg_model = VGG_Face(dao_single_path).model
-    lr_scheduler = get_exp_scheduler()
+    lr_scheduler = get_exp_scheduler(decay_step=1000)
 
     trainer = KerasTrain(model=vgg_model,
-                         name="VGGFace_1000ep_genki_modified_",
+                         name="VGGFace_1000ep_genki_modified",
                          train_data=dao_single_path.train_dataset,
                          valid_data=dao_single_path.valid_dataset,
                          batch_size=23,
