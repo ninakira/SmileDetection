@@ -19,7 +19,7 @@ class KerasTrain:
                  loss=None,
                  metrics=["accuracy"],
                  with_early_stop=True,
-                 early_stop_patience=8,
+                 early_stop_patience=5,
                  save_path="../SavedModels/",
                  with_cp_save=True,
                  cp_freq=20,
