@@ -8,8 +8,8 @@ Created on Tue Mar 30 00:43:34 2021
 
 from keras.applications import inception_v3
 from keras.models       import Model
-from keras.layers import Sequential, Dense, experimental, Dropout
-from keras import Input
+from keras.layers import Dense, experimental, Dropout
+from keras import Input, Sequential
 
 class InceptionV3_Pretrained:
     def __init__(self,
