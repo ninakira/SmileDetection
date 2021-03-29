@@ -14,7 +14,9 @@ from models.InceptionV3_pretrained import InceptionV3_Pretrained
 def train_InceptionV3(data_path):
     assert data_path is not None
 
-    dao_single_path = ImageDaoKeras(data_path=data_path)
+    dao_single_path = ImageDaoKeras(data_path=data_path,
+                                     height=299,
+                                     width=299)
 
     model = InceptionV3_Pretrained(dao_single_path).model
     lr_scheduler = get_exp_scheduler(decay_step=1000)
@@ -25,7 +27,9 @@ def train_InceptionV3(data_path):
                          valid_data=dao_single_path.valid_dataset,
                          iters=23,
                          epochs=1000,
-                         lr_scheduler=lr_scheduler)
+                         lr_scheduler=lr_scheduler,
+                         )
+    
 
     trainer.fit_model()
 
@@ -33,7 +37,7 @@ def train_InceptionV3(data_path):
 def main(argv):
     assert len(argv) > 0
     data_path = argv[0]
-    print("Training VGG on data from", data_path)
+    print("InceptionV3 on data from", data_path)
     train_InceptionV3(data_path)
 
 
