@@ -9,7 +9,7 @@ class KerasTrain:
                  description=None,
                  train_data=None,
                  valid_data=None,
-                 batch_size=23,
+                 iters=23,
                  from_logits=True,
                  epochs=400,
                  current_epoch=0,
@@ -18,7 +18,7 @@ class KerasTrain:
                  optimizer=None,
                  loss=None,
                  metrics=["accuracy"],
-                 with_early_stop=True,
+                 with_early_stop=False,
                  early_stop_patience=5,
                  save_path="../SavedModels/",
                  with_cp_save=True,
@@ -32,7 +32,7 @@ class KerasTrain:
         self.description = description
         self.train_data = train_data
         self.valid_data = valid_data
-        self.batch_size = batch_size
+        self.iters = iters
         self.from_logits = from_logits
         self.epochs = epochs
         self.current_epoch = current_epoch
@@ -107,7 +107,7 @@ class KerasTrain:
             filepath=checkpoint_dir,
             verbose=1,
             save_weights_only=True,
-            save_freq=self.cp_freq * self.batch_size)
+            save_freq=self.cp_freq * self.iters)
 
     def __get_tb_callback(self):
         logdir = os.path.join(self.tb_dir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))

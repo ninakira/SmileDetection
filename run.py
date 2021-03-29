@@ -15,7 +15,7 @@ def train_vgg_face(data_path):
                          name="Vgg_test_model",
                          train_data=dao_single_path.train_dataset,
                          valid_data=dao_single_path.valid_dataset,
-                         batch_size=23,
+                         iters=23,
                          epochs=3,
                          cp_freq=1)
     trainer.fit_model()
@@ -28,7 +28,7 @@ def train_bknet():
                          name="BKNet_test_model",
                          train_data=dao_single_path.train_dataset,
                          valid_data=dao_single_path.valid_dataset,
-                         batch_size=23,
+                         iters=23,
                          epochs=3,
                          cp_freq=1)
     trainer.fit_model()

@@ -16,7 +16,7 @@ def train_vgg_face(data_path):
                          name="VGGFace_1000ep_genki_modified",
                          train_data=dao_single_path.train_dataset,
                          valid_data=dao_single_path.valid_dataset,
-                         batch_size=23,
+                         iters=23,
                          epochs=1000,
                          lr_scheduler=lr_scheduler)
 
