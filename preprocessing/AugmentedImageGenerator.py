@@ -34,7 +34,6 @@ class AugmentedImageGenerator:
                 break
 
     def augment_image(self, image):
-        print(image is None)
         detected_face = self.detect_face(image)
         if self.augment_after_detection and type(detected_face) == np.ndarray:
             return self.augment_after_detection(detected_face)
