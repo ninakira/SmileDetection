@@ -25,7 +25,7 @@ def augment_with_albumentations(image):
 dir_data = "/home/aca1/datasets/genki"
 dir_augmented_data = "/home/aca1/datasets/genki_experiments"
 
-face_detector = FaceDetector()
+face_detector = FaceDetector(mode="test")
 
 datagen = ImageDataGenerator(rotation_range=15,
                              height_shift_range=0.1,
