@@ -27,7 +27,7 @@ class AugmentedImageGenerator:
 
             self.save_image(aug_image, label)
 
-            if self.n_saved_images % 10 == 0:
+            if self.n_saved_images % 100 == 0:
                 print('Currently at image:', self.n_saved_images)
             if self.n_saved_images >= n_pics:
                 print('Number of corrupted images:', self.corrupted_image_count)
