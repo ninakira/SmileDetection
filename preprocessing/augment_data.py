@@ -22,8 +22,8 @@ def augment_with_albumentations(image):
     return transform(image=image)['image']
 
 
-dir_data = "C:/Users/Lilit/notebooks/smile-dataset/genki"
-dir_augmented_data = "C:/Users/Lilit/notebooks/smile-dataset/genki-experiments"
+dir_data = "/home/aca1/datasets/genki"
+dir_augmented_data = "/home/aca1/datasets/genki_experiments"
 
 face_detector = FaceDetector()
 
