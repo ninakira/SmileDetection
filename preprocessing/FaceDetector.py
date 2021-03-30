@@ -1,6 +1,6 @@
 import dlib
 
-PATH = 'preprocessing/face_detection_models/haarcascade_frontalcatface.xml'
+PATH = '/home/aca1/code/SmileDetection/preprocessing/face_detection_models/haarcascade_frontalcatface.xml'
 
 
 class FaceDetector:
