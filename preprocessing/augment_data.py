@@ -22,7 +22,7 @@ def augment_with_albumentations(image):
     return transform(image=image)['image']
 
 
-dir_data = "/home/aca1/datasets/unzipped_celeba"
+dir_data = "/data/unzipped_celeba/celeba/validation"
 dir_augmented_data = "/home/aca1/datasets/genki_experiments"
 
 face_detector = FaceDetector(mode="test")
