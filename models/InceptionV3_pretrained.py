@@ -6,10 +6,10 @@ Created on Tue Mar 30 00:43:34 2021
 @author: rimashahbazyan
 """
 
-from keras.applications import inception_v3
-from keras.models       import Model
-from keras.layers import Dense, experimental, Dropout
-from keras import Input, Sequential
+from tensorflow.keras.applications import inception_v3
+from tensorflow.keras.models       import Model
+from tensorflow.keras.layers import Dense, experimental, Dropout
+from tensorflow.keras import Input, Sequential
 
 class InceptionV3_Pretrained:
     def __init__(self,
