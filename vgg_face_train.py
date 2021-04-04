@@ -7,7 +7,8 @@ from models.VGG_Face import VGGFace
 def train_vgg_face(data_path):
     assert data_path is not None
 
-    dao_single_path = ImageDaoKeras(data_path=data_path)
+    dao_single_path = ImageDaoKeras(train_path="../../../../data/augmented_celeba/train",
+                                    validation_path="../../../../data/augmented_celeba/validation")
 
     vgg_model = VGGFace().model
     lr_scheduler = get_exp_scheduler(decay_step=200)
@@ -26,7 +27,6 @@ def train_vgg_face(data_path):
 
 
 def main(argv):
-    assert len(argv) > 0
     data_path = argv[0]
     print("Training VGG Face on data from", data_path)
     train_vgg_face(data_path)
