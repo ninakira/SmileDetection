@@ -133,3 +133,5 @@ dmypy.json
 
 #h5 files
 *.h5
+
+*.notes.txt

@@ -10,14 +10,16 @@ def train_vgg_face(data_path):
     dao_single_path = ImageDaoKeras(data_path=data_path)
 
     vgg_model = VGGFace().model
-    lr_scheduler = get_exp_scheduler(decay_step=1000)
+    lr_scheduler = get_exp_scheduler(decay_step=200)
 
     trainer = KerasTrain(model=vgg_model,
-                         name="VGGFace_1000ep_genki_modified",
+                         name="VGGFace_200ep_celeba_aug",
                          train_data=dao_single_path.train_dataset,
                          valid_data=dao_single_path.valid_dataset,
-                         iters=23,
-                         epochs=1000,
+                         iters=4481,
+                         epochs=200,
+                         with_cp_save=False,
+                         with_tensorboard=False,
                          lr_scheduler=lr_scheduler)
 
     trainer.fit_model()
