@@ -4,8 +4,8 @@ from model_training import KerasTrain, get_exp_scheduler
 from models.VGG_Face import VGGFace
 
 
-def train_vgg_face(data_path):
-    assert data_path is not None
+def train_vgg_face(data_path=None):
+    # assert data_path is not None
 
     dao_single_path = ImageDaoKeras(train_path="../../../../data/augmented_celeba/train",
                                     validation_path="../../../../data/augmented_celeba/validation")
@@ -19,17 +19,16 @@ def train_vgg_face(data_path):
                          valid_data=dao_single_path.valid_dataset,
                          iters=4481,
                          epochs=200,
-                         with_cp_save=False,
-                         with_tensorboard=False,
+                         with_early_stop=True,
                          lr_scheduler=lr_scheduler)
 
     trainer.fit_model()
 
 
 def main(argv):
-    data_path = argv[0]
-    print("Training VGG Face on data from", data_path)
-    train_vgg_face(data_path)
+    # data_path = argv[0]
+    # print("Training VGG Face on data from", data_path)
+    train_vgg_face()
 
 
 if __name__ == "__main__":
