@@ -19,7 +19,7 @@ class KerasTrain:
                  loss=None,
                  metrics=["accuracy"],
                  with_early_stop=False,
-                 early_stop_patience=5,
+                 early_stop_patience=8,
                  save_path="../SavedModels/",
                  with_cp_save=True,
                  cp_freq=20,
@@ -123,3 +123,13 @@ def get_exp_scheduler(initial_learning_rate=0.05, decay_rt=0.96, decay_step=100)
         decay_steps=decay_step,
         decay_rate=decay_rt,
         staircase=True)
+
+
+def get_polymonial_scheduler(starter_learning_rate=0.1,
+                             end_learning_rate=0.001,
+                             decay_steps=10000):
+    return tf.keras.optimizers.schedules.PolynomialDecay(
+        starter_learning_rate,
+        decay_steps,
+        end_learning_rate,
+        power=0.5)
