@@ -22,8 +22,8 @@ def augment_with_albumentations(image):
     return transform(image=image)['image']
 
 
-dir_data = "/data/original_celeba/validation/0"
-dir_augmented_data = "/data/augmented_celeba2/validation/0"
+dir_data = "/data/original_celeba/validation"
+dir_augmented_data = "/data/augmented_celeba2/validation"
 
 face_detector = FaceDetector()
 
