@@ -22,9 +22,8 @@ def augment_with_albumentations(image):
     return transform(image=image)['image']
 
 
-dir_local_data = "/c/Users/Lilit/notebooks/smile-dataset/celeba/test/0"
-# dir_data = "/data/unzipped_celeba/celeba/validation"
-dir_augmented_data = "/c/Users/Lilit/notebooks/smile-dataset/test_aug_folder"
+dir_data = "/data/original_celeba/validation/0"
+dir_augmented_data = "/data/augmented_celeba2/validation/0"
 
 face_detector = FaceDetector()
 
@@ -36,7 +35,7 @@ datagen = ImageDataGenerator(rotation_range=15,
                              shear_range=0.1,
                              horizontal_flip=True)
 
-generator = AugmentedImageGenerator(face_detector, dir_local_data, dir_augmented_data, augment_with_albumentations)
+generator = AugmentedImageGenerator(face_detector, dir_data, dir_augmented_data, augment_with_albumentations)
 
-data = generator.generate(datagen, 1, 1000)
+data = generator.generate(datagen, 1, 40000)
 

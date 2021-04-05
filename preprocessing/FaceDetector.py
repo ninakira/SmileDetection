@@ -1,19 +1,16 @@
-import sys
-
-sys.path.append('/usr/local/lib/python3.7/site-packages')
-import cv2
+from mtcnn.mtcnn import MTCNN
 
 
 class FaceDetector:
-    def __init__(self):
-        self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    def __init__(self, mode='train'):
+        self.detector = MTCNN()
 
     def detect_faces(self, image):
         cropped_faces = []
-        gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
-        faces = self.face_cascade.detectMultiScale(gray, 1.01, 4)
-        for (x, y, w, h) in faces:
+        faces = self.detector.detect_faces(image)
+        for result in faces:
+            x, y, w, h = result['box']
             cropped_faces.append(image[y:y + h, x:x + w])
 
         if len(cropped_faces) == 0:
