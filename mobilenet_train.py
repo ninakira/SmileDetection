@@ -4,7 +4,7 @@ import tensorflow as tf
 import datetime
 import os
 
-PATH = 'data/augmented_celeba'
+PATH = '/data/augmented_celeba'
 
 train_dir = os.path.join(PATH, 'train')
 validation_dir = os.path.join(PATH, 'validation')
