@@ -1,4 +1,5 @@
-data_path = "../../../../data/"
+data_path = "/data/"
+# data_path = "./"
 
 
 def get_train_valid_paths(dir_name):

@@ -37,7 +37,7 @@ def train_bknet():
 def main(argv):
     print("Hey you! Smile! Arguments passed:", argv)
     # dao_single_path = ImageDaoKeras(data_path="images/train")
-    dao_separate_paths = ImageDaoKeras(train_path="images/train", validation_path="images/test")
+    dao_separate_paths = ImageDaoKeras(train_path="images/train", validation_path="images/validation")
 
     # train_vgg_face(argv[0])
     # train_bknet()
