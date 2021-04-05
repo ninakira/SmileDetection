@@ -135,3 +135,5 @@ dmypy.json
 *.h5
 
 *.notes.txt
+
+tf_logs
