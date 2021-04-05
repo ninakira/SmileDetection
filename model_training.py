@@ -22,11 +22,11 @@ class KerasTrain:
                  early_stop_patience=8,
                  save_path="../SavedModels/",
                  with_cp_save=True,
-                 cp_freq=20,
+                 cp_freq=10,
                  cp_dir="checkpoints/",
                  with_tensorboard=True,
                  tb_dir="tf_logs/",
-                 tb_hist_freq=30):
+                 tb_hist_freq=10):
         self.model = model
         self.name = name
         self.description = description
