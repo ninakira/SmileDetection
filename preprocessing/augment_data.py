@@ -37,5 +37,5 @@ datagen = ImageDataGenerator(rotation_range=15,
 
 generator = AugmentedImageGenerator(face_detector, dir_data, dir_augmented_data, augment_with_albumentations)
 
-data = generator.generate(datagen, 1, 40000)
+data = generator.generate(datagen, 1, 30000)
 
