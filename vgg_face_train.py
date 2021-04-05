@@ -1,13 +1,16 @@
 import sys
 import tensorflow as tf
-from data_access import ImageDaoKeras
-from model_training import KerasTrain, get_exp_scheduler, get_polymonial_scheduler
+from data_access import ImageDaoKerasBigData
+from model_training import KerasTrain, get_polymonial_scheduler
 from models.VGG_Face import VGGFace
+from config import get_train_valid_paths
 
 
-def train_vgg_face(data_path=None):
-    dao_single_path = ImageDaoKeras(train_path="../../../../data/augmented_celeba/train",
-                                    validation_path="../../../../data/augmented_celeba/validation")
+def train_vgg_face(train_path=None, valid_path=None):
+    assert train_path is not None
+    assert valid_path is not None
+
+    dao_single_path = ImageDaoKerasBigData(train_path="images/train", validation_path="images/test")
 
     vgg_model = VGGFace().model
     lr_scheduler = get_polymonial_scheduler()
@@ -25,7 +28,7 @@ def train_vgg_face(data_path=None):
 
 
 def reload_vgg_face_and_train():
-    dao_single_path = ImageDaoKeras(train_path="../../../../data/augmented_celeba/train",
+    dao_single_path = ImageDaoKerasBigData(train_path="../../../../data/augmented_celeba/train",
                                     validation_path="../../../../data/augmented_celeba/validation")
 
     loaded_model = tf.keras.models.load_model('../SavedModels/VGGFace_200ep_celeba_aug/SavedModel/0/')
@@ -43,9 +46,10 @@ def reload_vgg_face_and_train():
 
 
 def main(argv):
-    # data_path = argv[0]
-    # print("Training VGG Face on data from", data_path)
-    train_vgg_face()
+    data_path = argv[0] if len(argv) > 0 else "augmented_celeba"
+    print("Training VGG Face on data from", data_path)
+    train_path, valid_path = get_train_valid_paths(data_path)
+    train_vgg_face(train_path=train_path, valid_path=valid_path)
 
 
 if __name__ == "__main__":

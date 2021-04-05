@@ -1,10 +1,8 @@
-# import numpy as np
 import os
 import tensorflow as tf
-# import cv2
 import zipfile
 from pathlib import Path
-# from sklearn.model_selection import train_test_split
+
 
 class ImageDaoKeras:
     def __init__(self, data_path=None,
@@ -28,7 +26,6 @@ class ImageDaoKeras:
             self.train_dataset = self.load_data_keras(train_path)
             self.valid_dataset = self.load_data_keras(validation_path)
 
-
     def load_data_keras(self, data_path, subset_type=None, valid_split=None):
         return tf.keras.preprocessing.image_dataset_from_directory(
             data_path,
@@ -41,6 +38,42 @@ class ImageDaoKeras:
             seed=42,
             validation_split=valid_split,
             subset=subset_type,
+            interpolation="bilinear",
+            follow_links=False,
+        )
+
+
+class ImageDaoKerasBigData:
+    def __init__(self,
+                 train_path=None,
+                 validation_path=None,
+                 height=224,
+                 width=224,
+                 valid_split=0.25,
+                 batch_size=128,
+                 color_format="rgb"):
+        assert train_path is not None
+        assert validation_path is not None
+
+        self.IMG_HEIGHT = height
+        self.IMG_WIDTH = width
+        self.valid_split = valid_split
+        self.color_format = color_format
+        self.batch_size = batch_size
+
+        self.train_dataset = self.load_data_keras(train_path)
+        self.valid_dataset = self.load_data_keras(validation_path)
+
+    def load_data_keras(self, data_path):
+        datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
+        return datagen.flow_from_directory(
+            data_path,
+            class_mode="binary",
+            color_mode=self.color_format,
+            batch_size=self.batch_size,
+            target_size=(self.IMG_HEIGHT, self.IMG_WIDTH),
+            shuffle=True,
+            seed=42,
             interpolation="bilinear",
             follow_links=False,
         )
