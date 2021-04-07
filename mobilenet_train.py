@@ -59,18 +59,17 @@ def train_mobilenetv3():
     trainer.fit_model(initial_epoch=histories[-1].epoch[-1], total_epochs=2)
 
 def load_previous_model():
-    reconstructed_model = tf.keras.models.load_model("/home/aca1/code/SavedModels/MobileNetV3_trial/1")
-    print(reconstructed_model)
-    # reconstructed_model
-    # train_dataset, validation_dataset = load_data()
-    #
-    # trainer = KerasTrain(model=reconstructed_model,
-    #                      name="MobileNetV3_trial",
-    #                      train_data=train_dataset,
-    #                      valid_data=validation_dataset,
-    #                      optimizer=optimizer,
-    #                      epochs=1)
-    #
-    # trainer.fit_model()
-    # reconstructed_model.fit(test_input, test_target)
+    train_dataset, validation_dataset = load_data()
+    reconstructed_model = tf.keras.models.load_model("/home/aca1/code/SavedModels/MobileNetV3_trial/1/")
+    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+
+    trainer = KerasTrain(model=reconstructed_model,
+                         name="MobileNetV3_trial_v2",
+                         train_data=reconstructed_model,
+                         valid_data=validation_dataset,
+                         optimizer=optimizer,
+                         epochs=1)
+    trainer.fit_model(total_epochs=3)
+
+
 load_previous_model()
