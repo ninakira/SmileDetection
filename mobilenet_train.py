@@ -1,6 +1,6 @@
 from data_access import ImageDaoKerasBigData
 from models.MobileNetV3 import MobileNetV3
-from model_training import KerasTrain
+from model_training import KerasTrain, get_exp_scheduler
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image_dataset_from_directory
 
@@ -8,6 +8,17 @@ TRAIN_PATH = "/data/final_celeba/train"
 VALIDATION_PATH = "/data/final_celeba/validation"
 IMG_SIZE = (128, 128)
 BATCH_SIZE = 128
+
+
+def set_dynamic_memory_alocation():
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except RuntimeError as e:
+            print(e)
+
 
 def load_data():
     train_dataset = image_dataset_from_directory(TRAIN_PATH,
@@ -61,15 +72,16 @@ def train_mobilenetv3():
 def load_previous_model():
     train_dataset, validation_dataset = load_data()
     reconstructed_model = tf.keras.models.load_model("/home/aca1/code/SavedModels/MobileNetV3_trial/1/")
-    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+    lr_scheduler = get_exp_scheduler(decay_step=1000)
 
     trainer = KerasTrain(model=reconstructed_model,
                          name="MobileNetV3_trial_v2",
                          train_data=reconstructed_model,
                          valid_data=validation_dataset,
-                         optimizer=optimizer,
+                         lr_scheduler=lr_scheduler,
                          epochs=1)
     trainer.fit_model(total_epochs=3)
 
 
+set_dynamic_memory_alocation()
 load_previous_model()
