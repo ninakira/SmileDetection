@@ -1,8 +1,16 @@
 from FaceDetector import FaceDetector
 from AugmentedImageGenerator import AugmentedImageGenerator
 import albumentations as A
+import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
 
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    try:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except RuntimeError as e:
+        print(e)
 
 def augment_with_albumentations(image):
     transform = A.Compose([
@@ -22,8 +30,8 @@ def augment_with_albumentations(image):
     return transform(image=image)['image']
 
 
-dir_data = "/data/original_celeba/validation"
-dir_augmented_data = "/data/augmented_celeba2/validation"
+dir_data = "/data/original_celeba/celeba/validation"
+dir_augmented_data = "/data/final_celeba/validation"
 
 face_detector = FaceDetector()
 
@@ -37,5 +45,5 @@ datagen = ImageDataGenerator(rotation_range=15,
 
 generator = AugmentedImageGenerator(face_detector, dir_data, dir_augmented_data, augment_with_albumentations)
 
-data = generator.generate(datagen, 1, 30000)
+data = generator.generate(datagen,50000, 60000)
 

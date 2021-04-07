@@ -19,7 +19,8 @@ class AugmentedImageGenerator:
                                                         target_size=(178, 218),
                                                         batch_size=1,
                                                         class_mode='binary'):
-
+            if int(label[0]) == 1: 
+                continue
             aug_image = self.augment_image(image[0])
             if aug_image is None:
                 self.corrupted_image_count += 1

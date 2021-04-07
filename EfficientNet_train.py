@@ -17,11 +17,11 @@ def train_frozen(train_path, valid_path):
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
 
     trainer = KerasTrain(model=vgg_model,
-                         name="VGGFace_400ep_celeba_aug",
+                         name="EfficientNet_100ep_celeba_aug",
                          train_data=dao.train_dataset,
                          valid_data=dao.valid_dataset,
                          iters=5974,
-                         epochs=400,
+                         epochs=100,
                          with_early_stop=True,
                          optimizer=optimizer)
 
@@ -29,7 +29,7 @@ def train_frozen(train_path, valid_path):
 
 def main(argv):
     data_path = argv[0] if len(argv) > 0 else "augmented_celeba"
-    print("Training VGG Face on data from", data_path)
+    print("Training EficientNet on data from", data_path)
     train_path, valid_path = get_train_valid_paths(data_path)
     train_frozen(train_path=train_path, valid_path=valid_path)
 
