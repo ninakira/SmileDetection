@@ -55,13 +55,12 @@ class KerasTrain:
 
         self.histories = []
 
-        self.__compile_model()
+        self.compile_model()
         self.current_fit = 0
 
-    def __compile_model(self):
-        optimizer = self.optimizer if self.optimizer is not None \
-            else (tf.keras.optimizers.Adam(learning_rate=self.lr_scheduler) if self.lr_scheduler is not None
-                  else tf.keras.optimizers.Adam(lr=self.lr))
+    def compile_model(self, optimizer=None):
+        optimizer = self.__get_optimizer(optimizer)
+
         loss = self.loss if self.loss is not None \
             else tf.keras.losses.BinaryCrossentropy(from_logits=self.from_logits)
 
@@ -69,7 +68,7 @@ class KerasTrain:
                            loss=loss,
                            metrics=self.metrics)
 
-    def fit_model(self):
+    def fit_model(self, initial_epochs=0, total_epochs=None):
         callbacks = []
         if self.with_tensorboard:
             callbacks.append(self.__get_tb_callback())
@@ -78,17 +77,29 @@ class KerasTrain:
         if self.with_early_stop:
             callbacks.append(self.__get_early_stop_callback())
 
+        if total_epochs is not None:
+            self.epochs = total_epochs
+
         history = self.model.fit(
             self.train_data,
             validation_data=self.valid_data,
             epochs=self.epochs,
-            callbacks=callbacks
+            callbacks=callbacks,
+            initial_epochs=initial_epochs,
         )
 
         self.histories.append(history)
         self.__save_model(self.current_fit)
         self.current_fit += 1
-        self.current_epoch += self.epochs
+
+    def __get_optimizer(self, optimizer_arg):
+        if optimizer_arg is not None:
+            return optimizer_arg
+        if self.optimizer is not None:
+            return self.optimizer
+        if self.lr_scheduler is not None:
+            return tf.keras.optimizers.Adam(learning_rate=self.lr_scheduler)
+        return tf.keras.optimizers.Adam(lr=self.lr)
 
     def __save_model(self, fit_n):
         self.model.save(self.save_path + "SavedModel/{}".format(fit_n))
@@ -116,6 +127,8 @@ class KerasTrain:
     def get_tensorlog_path(self):
         return self.tb_dir
 
+    def get_history(self):
+        return self.histories
 
 def get_exp_scheduler(initial_learning_rate=0.05, decay_rt=0.96, decay_step=100):
     return tf.keras.optimizers.schedules.ExponentialDecay(
