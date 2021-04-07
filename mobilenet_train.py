@@ -37,7 +37,7 @@ def train_mobilenetv3():
     histories = trainer.get_history()
     fine_tune_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)
     trainer.compile_model(fine_tune_optimizer)
-    trainer.fit_model(initial_epochs=histories[-1].epoch[-1], total_epochs=2)
+    trainer.fit_model(initial_epoch=histories[-1].epoch[-1], total_epochs=2)
 
 
 def main():
