@@ -2,13 +2,28 @@ from data_access import ImageDaoKerasBigData
 from models.MobileNetV3 import MobileNetV3
 from model_training import KerasTrain
 import tensorflow as tf
+from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 TRAIN_PATH = "/data/final_celeba/train"
 VALIDATION_PATH = "/data/final_celeba/validation"
-
+IMG_SIZE = (128, 128)
+BATCH_SIZE = 128
 
 def train_mobilenetv3():
-    dao = ImageDaoKerasBigData(train_path=TRAIN_PATH, validation_path=VALIDATION_PATH)
+    train_dataset = image_dataset_from_directory(TRAIN_PATH,
+                                                 shuffle=True,
+                                                 batch_size=BATCH_SIZE,
+                                                 image_size=IMG_SIZE)
+
+    validation_dataset = image_dataset_from_directory(VALIDATION_PATH,
+                                                      shuffle=True,
+                                                      batch_size=BATCH_SIZE,
+                                                      image_size=IMG_SIZE)
+
+    AUTOTUNE = tf.data.AUTOTUNE
+
+    train_dataset = train_dataset.prefetch(buffer_size=AUTOTUNE)
+    validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)
 
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 
@@ -17,8 +32,8 @@ def train_mobilenetv3():
 
     trainer = KerasTrain(model=model,
                          name="MobileNetV3_trial",
-                         train_data=dao.train_dataset,
-                         valid_data=dao.valid_dataset,
+                         train_data=train_dataset,
+                         valid_data=validation_dataset,
                          optimizer=optimizer,
                          epochs=1)
 
