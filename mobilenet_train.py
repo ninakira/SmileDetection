@@ -20,7 +20,7 @@ def train_mobilenetv3():
                          train_data=dao.train_dataset,
                          valid_data=dao.valid_dataset,
                          optimizer=optimizer,
-                         epochs=20)
+                         epochs=1)
 
     trainer.fit_model()
 
@@ -40,5 +40,4 @@ def train_mobilenetv3():
     trainer.fit_model(initial_epoch=histories[-1].epoch[-1], total_epochs=2)
 
 
-def main():
-    train_mobilenetv3()
+train_mobilenetv3()

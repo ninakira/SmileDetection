@@ -68,7 +68,7 @@ class KerasTrain:
                            loss=loss,
                            metrics=self.metrics)
 
-    def fit_model(self, initial_epochs=0, total_epochs=None):
+    def fit_model(self, initial_epoch=0, total_epochs=None):
         callbacks = []
         if self.with_tensorboard:
             callbacks.append(self.__get_tb_callback())
@@ -85,7 +85,7 @@ class KerasTrain:
             validation_data=self.valid_data,
             epochs=self.epochs,
             callbacks=callbacks,
-            initial_epochs=initial_epochs,
+            initial_epoch=initial_epoch,
         )
 
         self.histories.append(history)
