@@ -1,8 +1,11 @@
-from models.MobileNetV3 import MobileNetV3
+import sys
 from model_training import KerasTrain
 from data_access import load_data
 from config import set_dynamic_memory_allocation
 import tensorflow as tf
+
+sys.path.append('../')
+import models.MobileNetV3
 
 TRAIN_PATH = "/data/final_celeba/train"
 VALIDATION_PATH = "/data/final_celeba/validation"
@@ -31,7 +34,7 @@ class MobileNetTrainer:
                         unfreeze_at,
                         fine_tune_epochs,
                         fine_tune_lr):
-        mobilenet = MobileNetV3()
+        mobilenet = models.MobileNetV3.MobileNetV3()
         self.model = mobilenet.define_model()
         self.set_trainer(self.model, name)
 
