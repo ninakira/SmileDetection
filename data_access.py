@@ -47,8 +47,8 @@ class ImageDaoKerasBigData:
     def __init__(self,
                  train_path=None,
                  validation_path=None,
-                 height=224,
-                 width=224,
+                 height=128,
+                 width=128,
                  valid_split=0.25,
                  batch_size=128,
                  color_format="rgb"):
