@@ -79,8 +79,8 @@ def load_previous_model():
                          name="MobileNetV3_trial_v2",
                          train_data=train_dataset,
                          valid_data=validation_dataset,
-                         optimizer=optimizer,
-                         epochs=1)
+                         optimizer=optimizer)
+
     trainer.fit_model(total_epochs=3)
 
 
