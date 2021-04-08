@@ -73,4 +73,4 @@ mobilenet_trainer.train_new_model(name="MobileNetV3_added_layer",
                                   frozen_lr=1e-4,
                                   unfreeze_at=50,
                                   fine_tune_epochs=3,
-                                  fine_tune_lr=10e-5)
+                                  fine_tune_lr=1e-5)
