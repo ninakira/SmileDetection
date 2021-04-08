@@ -4,7 +4,6 @@ from data_access import load_data
 from config import set_dynamic_memory_allocation
 import tensorflow as tf
 
-MODEL_PATH = "/home/aca1/code/SavedModels/MobileNetV3_trial/SavedModel/1/"
 TRAIN_PATH = "/data/final_celeba/train"
 VALIDATION_PATH = "/data/final_celeba/validation"
 IMG_SIZE = (128, 128)
@@ -19,13 +18,14 @@ class MobileNetTrainer:
         self.train_dataset = train_dataset
         self.validation_dataset = validation_dataset
 
-    def set_trainer(self, model):
-        self.trainer = KerasTrain(model=model,
-                                  name="MobileNetV3_trial",
+    def set_trainer(self, model, name):
+        self.trainer = KerasTrain(model,
+                                  name,
                                   train_data=self.train_dataset,
                                   valid_data=self.validation_dataset)
 
     def train_new_model(self,
+                        name,
                         frozen_epochs,
                         frozen_lr,
                         unfreeze_at,
@@ -33,7 +33,7 @@ class MobileNetTrainer:
                         fine_tune_lr):
         mobilenet = MobileNetV3()
         self.model = mobilenet.define_model()
-        self.set_trainer(self.model)
+        self.set_trainer(self.model, name)
 
         self.train_frozen(frozen_epochs, frozen_lr)
         self.fine_tune(fine_tune_epochs, fine_tune_lr, unfreeze_at)
@@ -68,4 +68,9 @@ set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_data(TRAIN_PATH, VALIDATION_PATH, IMG_SIZE, BATCH_SIZE)
 
 mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
-mobilenet_trainer.train_saved_model(MODEL_PATH, total_epochs=1, lr=1e-4)
+mobilenet_trainer.train_new_model(name="MobileNetV3_added_layer",
+                                  frozen_epochs=2,
+                                  frozen_lr=1e-4,
+                                  unfreeze_at=50,
+                                  fine_tune_epochs=3,
+                                  fine_tune_lr=10e-5)
