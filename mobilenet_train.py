@@ -72,7 +72,7 @@ def train_mobilenetv3():
 
 def load_previous_model():
     train_dataset, validation_dataset = load_data()
-    reconstructed_model = tf.keras.models.load_model("/home/aca1/code/SavedModels/SavedModel/MobileNetV3_trial/1/")
+    reconstructed_model = tf.keras.models.load_model("/home/aca1/code/SavedModels/MobileNetV3_trial/SavedModel/1/")
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
 
     trainer = KerasTrain(model=reconstructed_model,
