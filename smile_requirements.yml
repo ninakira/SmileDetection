@@ -7,6 +7,4 @@ dependencies:
     - pip
     - matplotlib
     - opencv
-#    - dlib=19.21.1
-#    - albumentations
     - scikit-learn

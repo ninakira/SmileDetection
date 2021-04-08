@@ -1,6 +1,6 @@
 import sys
 from data_access import ImageDaoKeras
-from model_training import KerasTrain, get_exp_scheduler
+from training.model_training import KerasTrain, get_exp_scheduler
 from models.VGG16 import VGG16
 
 

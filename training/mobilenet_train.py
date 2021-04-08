@@ -10,16 +10,6 @@ IMG_SIZE = (128, 128)
 BATCH_SIZE = 128
 
 
-def set_dynamic_memory_alocation():
-    gpus = tf.config.list_physical_devices('GPU')
-    if gpus:
-        try:
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
-        except RuntimeError as e:
-            print(e)
-
-
 def load_data():
     train_dataset = image_dataset_from_directory(TRAIN_PATH,
                                                  shuffle=True,

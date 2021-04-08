@@ -2,7 +2,7 @@ from mtcnn.mtcnn import MTCNN
 
 
 class FaceDetector:
-    def __init__(self, mode='train'):
+    def __init__(self):
         self.detector = MTCNN()
 
     def detect_faces(self, image):

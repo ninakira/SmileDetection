@@ -20,7 +20,7 @@ class KerasTrain:
                  metrics=["accuracy"],
                  with_early_stop=False,
                  early_stop_patience=8,
-                 save_path="../SavedModels/",
+                 save_path="home/aca1/code/SavedModels/",
                  with_cp_save=True,
                  cp_freq=10,
                  cp_dir="checkpoints/",

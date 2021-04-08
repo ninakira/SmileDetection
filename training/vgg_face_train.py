@@ -1,7 +1,7 @@
 import sys
 import tensorflow as tf
 from data_access import ImageDaoKerasBigData
-from model_training import KerasTrain, get_polymonial_scheduler
+from training.model_training import KerasTrain, get_polymonial_scheduler
 from models.VGG_Face import VGGFace
 from config import get_train_valid_paths
 
@@ -28,10 +28,10 @@ def train_vgg_face(train_path, valid_path):
 
 
 def reload_vgg_face_and_train():
-    dao_single_path = ImageDaoKerasBigData(train_path="../../../../data/augmented_celeba/train",
-                                           validation_path="../../../../data/augmented_celeba/validation")
+    dao_single_path = ImageDaoKerasBigData(train_path="/data/augmented_celeba/train",
+                                           validation_path="/data/augmented_celeba/validation")
 
-    loaded_model = tf.keras.models.load_model('../SavedModels/VGGFace_200ep_celeba_aug/SavedModel/0/')
+    loaded_model = tf.keras.models.load_model('home/aca1/code/SavedModels/VGGFace_200ep_celeba_aug/SavedModel/0/')
     lr_scheduler = get_polymonial_scheduler()
 
     trainer = KerasTrain(model=loaded_model,

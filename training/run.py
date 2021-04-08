@@ -1,6 +1,6 @@
 import sys
 from data_access import ImageDaoKeras
-from model_training import KerasTrain
+from training.model_training import KerasTrain
 from models.VGG16 import VGG16
 from models.BKNet import BKNet
 from tensorflow.python.client import device_lib
@@ -9,7 +9,7 @@ from tensorflow.python.client import device_lib
 def train_vgg_face(data_path):
     assert data_path is not None
 
-    dao_single_path = ImageDaoKeras(data_path="images/train")
+    dao_single_path = ImageDaoKeras(data_path="../images/train")
     vgg_model = VGG16(dao_single_path).model
     trainer = KerasTrain(model=vgg_model,
                          name="Vgg_test_model",
@@ -22,7 +22,7 @@ def train_vgg_face(data_path):
 
 
 def train_bknet():
-    dao_single_path = ImageDaoKeras(data_path="images/train")
+    dao_single_path = ImageDaoKeras(data_path="../images/train")
     bknet_model = BKNet(dao_single_path).model
     trainer = KerasTrain(model=bknet_model,
                          name="BKNet_test_model",
@@ -37,7 +37,7 @@ def train_bknet():
 def main(argv):
     print("Hey you! Smile! Arguments passed:", argv)
     # dao_single_path = ImageDaoKeras(data_path="images/train")
-    dao_separate_paths = ImageDaoKeras(train_path="images/train", validation_path="images/validation")
+    dao_separate_paths = ImageDaoKeras(train_path="../images/train", validation_path="../images/validation")
 
     # train_vgg_face(argv[0])
     # train_bknet()
