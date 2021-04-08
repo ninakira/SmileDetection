@@ -99,7 +99,9 @@ class KerasTrain:
             return self.optimizer
         if self.lr_scheduler is not None:
             return tf.keras.optimizers.Adam(learning_rate=self.lr_scheduler)
-        return tf.keras.optimizers.Adam(lr=self.lr)
+        if self.lr is not None:
+            return tf.keras.optimizers.Adam(learning_rate=self.lr)
+        return tf.keras.optimizers.Adam(learning_rate=1e-3)
 
     def __save_model(self, fit_n):
         self.model.save(self.save_path + "SavedModel/{}".format(fit_n))
@@ -129,6 +131,7 @@ class KerasTrain:
 
     def get_history(self):
         return self.histories
+
 
 def get_exp_scheduler(initial_learning_rate=0.05, decay_rt=0.96, decay_step=100):
     return tf.keras.optimizers.schedules.ExponentialDecay(

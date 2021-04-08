@@ -2,6 +2,7 @@ import os
 import tensorflow as tf
 import zipfile
 from pathlib import Path
+from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 
 class ImageDaoKeras:
@@ -65,7 +66,7 @@ class ImageDaoKerasBigData:
         self.valid_dataset = self.load_data_keras(validation_path)
 
     def load_data_keras(self, data_path):
-        datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
+        datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
         return datagen.flow_from_directory(
             data_path,
             class_mode="binary",
@@ -77,6 +78,7 @@ class ImageDaoKerasBigData:
             interpolation="bilinear",
             follow_links=False,
         )
+
 
 # class ImageDaoCustom:
 #     def __init__(self, data_path, height=224, width=224, valid_split=0.25, batch_size=128):
@@ -125,9 +127,29 @@ class DataExtractor:
 
         self.extract_zip(data_path)
 
-
     def extract_zip(self, zip_path):
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             path = Path(zip_path)
             name = os.path.basename(path).split('.')[0]
             zip_ref.extractall(str(path.parent) + "/unzipped_" + name)
+
+
+# Temporary working loader. Feel free to fix me
+AUTOTUNE = tf.data.AUTOTUNE
+
+
+def load_data(train_path, validation_path, img_size, batch_size):
+    train_dataset = image_dataset_from_directory(train_path,
+                                                 shuffle=True,
+                                                 batch_size=batch_size,
+                                                 image_size=img_size)
+
+    validation_dataset = image_dataset_from_directory(validation_path,
+                                                      shuffle=True,
+                                                      batch_size=batch_size,
+                                                      image_size=img_size)
+
+    train_dataset = train_dataset.prefetch(buffer_size=AUTOTUNE)
+    validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)
+
+    return train_dataset, validation_dataset

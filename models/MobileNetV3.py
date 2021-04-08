@@ -15,7 +15,8 @@ class MobileNetV3:
         x = self.preprocess_input(inputs)
         x = self.base_model(x, training=False)
         x = tf.keras.layers.GlobalAveragePooling2D()(x)
-        x = tf.keras.layers.Dropout(0.2)(x)
+        x = tf.keras.layers.Dropout(0.3)(x)
+        x = tf.keras.layers.Dense(1028)(x)
         outputs = tf.keras.layers.Dense(1)(x)
         return tf.keras.Model(inputs, outputs)
 

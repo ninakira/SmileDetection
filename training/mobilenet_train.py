@@ -1,78 +1,71 @@
-from data_access import ImageDaoKerasBigData
 from models.MobileNetV3 import MobileNetV3
-from model_training import KerasTrain, get_exp_scheduler
+from model_training import KerasTrain
+from data_access import load_data
+from config import set_dynamic_memory_allocation
 import tensorflow as tf
-from tensorflow.keras.preprocessing import image_dataset_from_directory
 
+MODEL_PATH = "/home/aca1/code/SavedModels/MobileNetV3_trial/SavedModel/1/"
 TRAIN_PATH = "/data/final_celeba/train"
 VALIDATION_PATH = "/data/final_celeba/validation"
 IMG_SIZE = (128, 128)
 BATCH_SIZE = 128
 
 
-def load_data():
-    train_dataset = image_dataset_from_directory(TRAIN_PATH,
-                                                 shuffle=True,
-                                                 batch_size=BATCH_SIZE,
-                                                 image_size=IMG_SIZE)
+class MobileNetTrainer:
+    def __init__(self, train_dataset, validation_dataset):
+        self.model = None
+        self.base = None
+        self.trainer = None
+        self.train_dataset = train_dataset
+        self.validation_dataset = validation_dataset
 
-    validation_dataset = image_dataset_from_directory(VALIDATION_PATH,
-                                                      shuffle=True,
-                                                      batch_size=BATCH_SIZE,
-                                                      image_size=IMG_SIZE)
+    def set_trainer(self, model):
+        self.trainer = KerasTrain(model=model,
+                                  name="MobileNetV3_trial",
+                                  train_data=self.train_dataset,
+                                  valid_data=self.validation_dataset)
 
-    AUTOTUNE = tf.data.AUTOTUNE
+    def train_new_model(self,
+                        frozen_epochs,
+                        frozen_lr,
+                        unfreeze_at,
+                        fine_tune_epochs,
+                        fine_tune_lr):
+        mobilenet = MobileNetV3()
+        self.model = mobilenet.define_model()
+        self.set_trainer(self.model)
 
-    train_dataset = train_dataset.prefetch(buffer_size=AUTOTUNE)
-    validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)
+        self.train_frozen(frozen_epochs, frozen_lr)
+        self.fine_tune(fine_tune_epochs, fine_tune_lr, unfreeze_at)
 
-    return train_dataset, validation_dataset
+    def train_frozen(self, total_epochs, lr):
+        optimizer = tf.keras.optimizers.Adam(lr)
+        self.trainer.compile_model(optimizer)
+        self.trainer.fit_model(total_epochs)
 
-def train_mobilenetv3():
-    train_dataset, validation_dataset = load_data()
-    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+    def fine_tune(self, total_epochs, lr, fine_tune_at):
+        self.base.trainable = True
 
-    mobilenet = MobileNetV3()
-    model = mobilenet.define_model()
+        for layer in self.base.layers[:fine_tune_at]:
+            layer.trainable = False
 
-    trainer = KerasTrain(model=model,
-                         name="MobileNetV3_trial",
-                         train_data=train_dataset,
-                         valid_data=validation_dataset,
-                         optimizer=optimizer,
-                         epochs=1)
+        histories = self.trainer.get_history()
+        optimizer = tf.keras.optimizers.Adam(lr)
+        self.trainer.compile_model(optimizer)
+        self.trainer.fit_modelfit_model(total_epochs,
+                                        initial_epoch=histories[-1].epoch[-1])
 
-    trainer.fit_model()
+    def train_saved_model(self, path, total_epochs, lr):
+        reconstructed_model = tf.keras.models.load_model(path)
+        self.set_trainer(reconstructed_model)
 
-    base = mobilenet.get_base()
-    base.trainable = True
-
-    # Fine-tune from this layer onwards
-    fine_tune_at = 1
-
-    # Freeze all the layers before the `fine_tune_at` layer
-    for layer in base.layers[:fine_tune_at]:
-        layer.trainable = False
-
-    histories = trainer.get_history()
-    fine_tune_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)
-    trainer.compile_model(fine_tune_optimizer)
-    trainer.fit_model(initial_epoch=histories[-1].epoch[-1], total_epochs=2)
-
-
-def load_previous_model():
-    train_dataset, validation_dataset = load_data()
-    reconstructed_model = tf.keras.models.load_model("/home/aca1/code/SavedModels/MobileNetV3_trial/SavedModel/1/")
-    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-
-    trainer = KerasTrain(model=reconstructed_model,
-                         name="MobileNetV3_trial_v2",
-                         train_data=train_dataset,
-                         valid_data=validation_dataset,
-                         optimizer=optimizer)
-
-    trainer.fit_model(total_epochs=3)
+        optimizer = tf.keras.optimizers.Adam(lr)
+        self.trainer.compile_model(optimizer)
+        self.trainer.fit_model(total_epochs)
 
 
-set_dynamic_memory_alocation()
-load_previous_model()
+set_dynamic_memory_allocation()
+celeba_train, celeba_validation = load_data(TRAIN_PATH, VALIDATION_PATH, IMG_SIZE, BATCH_SIZE)
+
+mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
+mobilenet_trainer.train_saved_model(MODEL_PATH, total_epochs=1, lr=1e-4)
