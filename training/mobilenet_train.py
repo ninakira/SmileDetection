@@ -1,11 +1,12 @@
 import sys
 from model_training import KerasTrain
-from data_access import load_data
-from config import set_dynamic_memory_allocation
 import tensorflow as tf
 
 sys.path.append('../')
 import models.MobileNetV3
+from data_access import load_data
+from config import set_dynamic_memory_allocation
+
 
 TRAIN_PATH = "/data/final_celeba/train"
 VALIDATION_PATH = "/data/final_celeba/validation"
