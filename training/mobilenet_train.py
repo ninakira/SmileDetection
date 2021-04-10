@@ -37,6 +37,7 @@ class MobileNetTrainer:
                         fine_tune_lr):
         mobilenet = models.MobileNetV3.MobileNetV3()
         self.model = mobilenet.define_model()
+        self.base = mobilenet.get_base()
         self.set_trainer(self.model, name)
 
         self.train_frozen(frozen_epochs, frozen_lr)

@@ -9,6 +9,8 @@ generator_before_face_detection = ImageDataGenerator(rotation_range=15,
                                                      shear_range=0.1,
                                                      horizontal_flip=True)
 
+generator_no_augment = ImageDataGenerator()
+
 
 def augmenter_after_face_detection(image):
     transform = A.Compose([

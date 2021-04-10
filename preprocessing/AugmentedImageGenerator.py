@@ -25,7 +25,8 @@ class AugmentedImageGenerator:
                 .flow_from_directory(self.dir_data,
                                      target_size=(178, 218),
                                      batch_size=1,
-                                     class_mode='binary'):
+                                     class_mode='binary',
+                                     shuffle=False):
 
             processed_image = self.process_image(image[0])
             if processed_image is None:
