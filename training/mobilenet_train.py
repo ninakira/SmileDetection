@@ -8,7 +8,7 @@ from data_access import load_data
 from config import set_dynamic_memory_allocation
 
 
-TRAIN_PATH = "/data/final_celeba/train"
+TRAIN_PATH = "/data/final_celeba/validation"
 VALIDATION_PATH = "/data/final_celeba/validation"
 IMG_SIZE = (128, 128)
 BATCH_SIZE = 128
@@ -43,12 +43,12 @@ class MobileNetTrainer:
         self.train_frozen(frozen_epochs, frozen_lr)
         self.fine_tune(fine_tune_epochs, fine_tune_lr, unfreeze_at)
 
-    def train_frozen(self, total_epochs, lr):
+    def train_frozen(self, epochs, lr):
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_model(total_epochs)
+        self.trainer.fit_model(epochs)
 
-    def fine_tune(self, total_epochs, lr, fine_tune_at):
+    def fine_tune(self, epochs, lr, fine_tune_at):
         self.base.trainable = True
 
         for layer in self.base.layers[:fine_tune_at]:
@@ -57,16 +57,15 @@ class MobileNetTrainer:
         histories = self.trainer.get_history()
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_modelfit_model(total_epochs,
-                                        initial_epoch=histories[-1].epoch[-1])
+        self.trainer.fit_model(epochs, initial_epoch=histories[-1].epoch[-1])
 
-    def train_saved_model(self, path, total_epochs, lr):
+    def train_saved_model(self, path, epochs, lr):
         reconstructed_model = tf.keras.models.load_model(path)
         self.set_trainer(reconstructed_model, "Reconstructed")
 
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_model(total_epochs)
+        self.trainer.fit_model(epochs)
 
 
 set_dynamic_memory_allocation()

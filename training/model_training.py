@@ -76,7 +76,7 @@ class KerasTrain:
                                                 restore_best_weights=True)
 
     def __get_cp_callback(self):
-        checkpoint_path = self.cp_dir + "weights.{epoch:02d}-{val_loss:.2f}.hdf5"
+        checkpoint_path = self.cp_dir + "weights.{epoch:02d}-{val_loss:.2f}.ckpt"
         checkpoint_dir = os.path.dirname(checkpoint_path)
         self.model.save_weights(checkpoint_path)
 
