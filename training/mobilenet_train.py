@@ -8,7 +8,7 @@ from data_access import load_data
 from config import set_dynamic_memory_allocation
 
 
-TRAIN_PATH = "/data/final_celeba/validation"
+TRAIN_PATH = "/data/final_celeba/train"
 VALIDATION_PATH = "/data/final_celeba/validation"
 IMG_SIZE = (128, 128)
 BATCH_SIZE = 128

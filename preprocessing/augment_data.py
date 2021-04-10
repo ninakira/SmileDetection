@@ -1,7 +1,10 @@
+import sys
 from FaceDetector import FaceDetector
 from AugmentedImageGenerator import AugmentedImageGenerator
-from config import set_dynamic_memory_allocation
 from all_augmenters import generator_no_augment
+
+sys.path.append('../')
+from config import set_dynamic_memory_allocation
 
 
 DIR_DATA = "/data/original_celeba/celeba/test"
