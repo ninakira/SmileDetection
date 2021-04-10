@@ -57,8 +57,8 @@ class KerasTrain:
 
         history = self.model.fit(
             self.train_data,
-            epochs,
-            initial_epoch,
+            epochs=epochs,
+            initial_epoch=initial_epoch,
             callbacks=callbacks,
             validation_data=self.valid_data,
         )
