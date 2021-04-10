@@ -9,7 +9,7 @@ class KerasTrain:
                  description=None,
                  train_data=None,
                  valid_data=None,
-                 save_path="/home/aca1/code/SavedModels",
+                 save_path="/home/aca1/code/SavedModels/",
                  with_cp_save=True,
                  cp_dir="checkpoints/",
                  with_tensorboard=True,
@@ -40,9 +40,7 @@ class KerasTrain:
         if loss is None:
             loss = tf.keras.losses.BinaryCrossentropy(from_logits)
 
-        self.model.compile(optimizer,
-                           loss,
-                           metrics)
+        self.model.compile(optimizer, loss, metrics)
 
     def fit_model(self,
                   epochs,
@@ -59,10 +57,10 @@ class KerasTrain:
 
         history = self.model.fit(
             self.train_data,
+            epochs,
+            callbacks,
+            initial_epoch,
             validation_data=self.valid_data,
-            epochs=epochs,
-            callbacks=callbacks,
-            initial_epoch=initial_epoch,
         )
 
         self.histories.append(history)
@@ -78,7 +76,7 @@ class KerasTrain:
                                                 restore_best_weights=True)
 
     def __get_cp_callback(self):
-        checkpoint_path = self.cp_dir + "cp-{epoch:04d}.ckpt"
+        checkpoint_path = self.cp_dir + "weights.{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint_dir = os.path.dirname(checkpoint_path)
         self.model.save_weights(checkpoint_path)
 
@@ -99,11 +97,11 @@ class KerasTrain:
         return self.histories
 
 
-def get_exp_scheduler(initial_learning_rate=0.05, decay_rt=0.96, decay_step=100):
+def get_exp_scheduler(initial_learning_rate=0.05, decay_rate=0.96, decay_steps=100):
     return tf.keras.optimizers.schedules.ExponentialDecay(
         initial_learning_rate,
-        decay_steps=decay_step,
-        decay_rate=decay_rt,
+        decay_steps,
+        decay_rate,
         staircase=True)
 
 
