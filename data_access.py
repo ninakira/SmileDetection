@@ -137,17 +137,21 @@ class DataExtractor:
 # Temporary working loader. Feel free to fix me
 AUTOTUNE = tf.data.AUTOTUNE
 
+TRAIN_PATH = "/data/celeba/final_celeba/train"
+VALIDATION_PATH = "/data/celeba/final_celeba/validation"
+IMG_SIZE = (128, 128)
 
-def load_data(train_path, validation_path, img_size, batch_size):
-    train_dataset = image_dataset_from_directory(train_path,
+
+def load_celeba(batch_size=128):
+    train_dataset = image_dataset_from_directory(TRAIN_PATH,
                                                  shuffle=True,
                                                  batch_size=batch_size,
-                                                 image_size=img_size)
+                                                 image_size=IMG_SIZE)
 
-    validation_dataset = image_dataset_from_directory(validation_path,
+    validation_dataset = image_dataset_from_directory(VALIDATION_PATH,
                                                       shuffle=True,
                                                       batch_size=batch_size,
-                                                      image_size=img_size)
+                                                      image_size=IMG_SIZE)
 
     train_dataset = train_dataset.prefetch(buffer_size=AUTOTUNE)
     validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)

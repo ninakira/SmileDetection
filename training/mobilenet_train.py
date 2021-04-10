@@ -4,14 +4,8 @@ from model_training import KerasTrain
 
 sys.path.append('../')
 import models.MobileNetV3
-from data_access import load_data
+from data_access import load_celeba
 from config import set_dynamic_memory_allocation
-
-
-TRAIN_PATH = "/data/final_celeba/train"
-VALIDATION_PATH = "/data/final_celeba/validation"
-IMG_SIZE = (128, 128)
-BATCH_SIZE = 128
 
 
 class MobileNetTrainer:
@@ -32,7 +26,7 @@ class MobileNetTrainer:
                         name,
                         frozen_epochs,
                         frozen_lr,
-                        unfreeze_at,
+                        fine_tune_at,
                         fine_tune_epochs,
                         fine_tune_lr):
         mobilenet = models.MobileNetV3.MobileNetV3()
@@ -41,7 +35,7 @@ class MobileNetTrainer:
         self.set_trainer(self.model, name)
 
         self.train_frozen(frozen_epochs, frozen_lr)
-        self.fine_tune(fine_tune_epochs, fine_tune_lr, unfreeze_at)
+        self.fine_tune(fine_tune_epochs, fine_tune_lr, fine_tune_at)
 
     def train_frozen(self, epochs, lr):
         optimizer = tf.keras.optimizers.Adam(lr)
@@ -59,9 +53,9 @@ class MobileNetTrainer:
         self.trainer.compile_model(optimizer)
         self.trainer.fit_model(epochs, initial_epoch=histories[-1].epoch[-1])
 
-    def train_saved_model(self, path, epochs, lr):
+    def train_saved_model(self, name, path, epochs, lr):
         reconstructed_model = tf.keras.models.load_model(path)
-        self.set_trainer(reconstructed_model, "Reconstructed")
+        self.set_trainer(reconstructed_model, name)
 
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
@@ -69,12 +63,12 @@ class MobileNetTrainer:
 
 
 set_dynamic_memory_allocation()
-celeba_train, celeba_validation = load_data(TRAIN_PATH, VALIDATION_PATH, IMG_SIZE, BATCH_SIZE)
+celeba_train, celeba_validation = load_celeba()
 
 mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
 mobilenet_trainer.train_new_model(name="MobileNetV3_added_layer",
                                   frozen_epochs=2,
                                   frozen_lr=1e-4,
-                                  unfreeze_at=50,
+                                  fine_tune_at=50,
                                   fine_tune_epochs=3,
                                   fine_tune_lr=1e-5)
