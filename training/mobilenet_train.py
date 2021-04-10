@@ -1,6 +1,6 @@
 import sys
-from model_training import KerasTrain
 import tensorflow as tf
+from model_training import KerasTrain
 
 sys.path.append('../')
 import models.MobileNetV3
