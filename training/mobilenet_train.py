@@ -61,7 +61,7 @@ class MobileNetTrainer:
 
     def train_saved_model(self, path, total_epochs, lr):
         reconstructed_model = tf.keras.models.load_model(path)
-        self.set_trainer(reconstructed_model)
+        self.set_trainer(reconstructed_model, "Reconstructed")
 
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)

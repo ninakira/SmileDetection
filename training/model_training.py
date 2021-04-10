@@ -9,20 +9,8 @@ class KerasTrain:
                  description=None,
                  train_data=None,
                  valid_data=None,
-                 iters=23,
-                 from_logits=True,
-                 epochs=400,
-                 current_epoch=0,
-                 lr=0.001,
-                 lr_scheduler=None,
-                 optimizer=None,
-                 loss=None,
-                 metrics=["accuracy"],
-                 with_early_stop=False,
-                 early_stop_patience=8,
                  save_path="home/aca1/code/SavedModels/",
                  with_cp_save=True,
-                 cp_freq=10,
                  cp_dir="checkpoints/",
                  with_tensorboard=True,
                  tb_dir="tf_logs/",
@@ -32,21 +20,9 @@ class KerasTrain:
         self.description = description
         self.train_data = train_data
         self.valid_data = valid_data
-        self.iters = iters
-        self.from_logits = from_logits
-        self.epochs = epochs
-        self.current_epoch = current_epoch
-        self.lr = lr
-        self.lr_scheduler = lr_scheduler
-        self.optimizer = optimizer
-        self.loss = loss
-        self.metrics = metrics
-        self.with_early_stop = with_early_stop
-        self.early_stop_patience = early_stop_patience
 
         self.save_path = save_path + self.name + "/"
         self.with_cp_save = with_cp_save
-        self.cp_freq = cp_freq
         self.cp_dir = self.save_path + cp_dir
 
         self.with_tensorboard = with_tensorboard
@@ -54,36 +30,37 @@ class KerasTrain:
         self.tb_hist_freq = tb_hist_freq
 
         self.histories = []
-
-        self.compile_model()
         self.current_fit = 0
 
-    def compile_model(self, optimizer=None):
-        optimizer = self.__get_optimizer(optimizer)
+    def compile_model(self,
+                      optimizer,
+                      loss=None,
+                      from_logits=True,
+                      metrics=["accuracy"]):
+        if loss is None:
+            loss = tf.keras.losses.BinaryCrossentropy(from_logits)
 
-        loss = self.loss if self.loss is not None \
-            else tf.keras.losses.BinaryCrossentropy(from_logits=self.from_logits)
+        self.model.compile(optimizer,
+                           loss,
+                           metrics)
 
-        self.model.compile(optimizer=optimizer,
-                           loss=loss,
-                           metrics=self.metrics)
-
-    def fit_model(self, initial_epoch=0, total_epochs=None):
+    def fit_model(self,
+                  epochs,
+                  with_early_stop=False,
+                  early_stop_patience=8,
+                  initial_epoch=0):
         callbacks = []
         if self.with_tensorboard:
             callbacks.append(self.__get_tb_callback())
         if self.with_cp_save:
             callbacks.append(self.__get_cp_callback())
-        if self.with_early_stop:
-            callbacks.append(self.__get_early_stop_callback())
-
-        if total_epochs is not None:
-            self.epochs = total_epochs
+        if with_early_stop:
+            callbacks.append(self.__get_early_stop_callback(early_stop_patience))
 
         history = self.model.fit(
             self.train_data,
             validation_data=self.valid_data,
-            epochs=self.epochs,
+            epochs=epochs,
             callbacks=callbacks,
             initial_epoch=initial_epoch,
         )
@@ -92,35 +69,24 @@ class KerasTrain:
         self.__save_model(self.current_fit)
         self.current_fit += 1
 
-    def __get_optimizer(self, optimizer_arg):
-        if optimizer_arg is not None:
-            return optimizer_arg
-        if self.optimizer is not None:
-            return self.optimizer
-        if self.lr_scheduler is not None:
-            return tf.keras.optimizers.Adam(learning_rate=self.lr_scheduler)
-        if self.lr is not None:
-            return tf.keras.optimizers.Adam(learning_rate=self.lr)
-        return tf.keras.optimizers.Adam(learning_rate=1e-3)
-
     def __save_model(self, fit_n):
         self.model.save(self.save_path + "SavedModel/{}".format(fit_n))
 
-    def __get_early_stop_callback(self):
+    def __get_early_stop_callback(self, early_stop_patience):
         return tf.keras.callbacks.EarlyStopping(monitor='val_loss',
-                                                patience=self.early_stop_patience,
+                                                patience=early_stop_patience,
                                                 restore_best_weights=True)
 
     def __get_cp_callback(self):
         checkpoint_path = self.cp_dir + "cp-{epoch:04d}.ckpt"
         checkpoint_dir = os.path.dirname(checkpoint_path)
-        self.model.save_weights(checkpoint_path.format(epoch=self.current_epoch))
+        self.model.save_weights(checkpoint_path)
 
         return tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_dir,
             verbose=1,
             save_weights_only=True,
-            save_freq=self.cp_freq * self.iters)
+            save_freq="epoch")
 
     def __get_tb_callback(self):
         logdir = os.path.join(self.tb_dir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
