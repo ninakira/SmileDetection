@@ -9,7 +9,7 @@ class KerasTrain:
                  description=None,
                  train_data=None,
                  valid_data=None,
-                 save_path="/SavedModels/",
+                 save_path="/home/aca1/code/SavedModels",
                  with_cp_save=True,
                  cp_dir="checkpoints/",
                  with_tensorboard=True,
