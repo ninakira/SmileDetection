@@ -7,8 +7,8 @@ sys.path.append('../')
 from config import set_dynamic_memory_allocation
 
 
-DIR_DATA = "/data/original_celeba/celeba/test"
-DIR_AUGMENTED_DATA = "/data/final_celeba/test"
+DIR_DATA = "/data/celeba/original_celeba/celeba/test"
+DIR_AUGMENTED_DATA = "/data/celeba/final_celeba/test"
 START_INDEX = 0
 N_IMAGES = 10000
 
