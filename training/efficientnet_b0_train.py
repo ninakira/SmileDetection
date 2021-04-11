@@ -62,17 +62,12 @@ class EfficientNetTrainer:
         self.trainer.fit_model(epochs)
 
 
-def main():
-    set_dynamic_memory_allocation()
-    celeba_train, celeba_validation = load_celeba()
+set_dynamic_memory_allocation()
+celeba_train, celeba_validation = load_celeba()
 
-    efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
-    efficient_net_trainer.train_new_model(name="EfficientNet_with_finetuning_final_celeba",
-                                          frozen_epochs=25,
-                                          frozen_lr=1e-4,
-                                          fine_tune_epochs=100,
-                                          fine_tune_lr=1e-5)
-
-
-if __name__ == "__main__":
-    main()
+efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
+efficient_net_trainer.train_new_model(name="EfficientNet_with_finetuning_final_celeba",
+                                      frozen_epochs=25,
+                                      frozen_lr=1e-4,
+                                      fine_tune_epochs=100,
+                                      fine_tune_lr=1e-5)
