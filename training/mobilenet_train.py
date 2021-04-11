@@ -66,5 +66,9 @@ set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_celeba()
 
 mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
-PATH = "/home/aca1/code/SavedModels/MobileNetV3_added_layer/SavedModel/1"
-mobilenet_trainer.train_saved_model(name="MobileNetV3_added_layer_retrain", epochs=2, path=PATH, lr=1e-6)
+mobilenet_trainer.train_new_model(name="Mobilenet_flatten_layer",
+                                  frozen_epochs=2,
+                                  frozen_lr=1e-4,
+                                  fine_tune_at=50,
+                                  fine_tune_epochs=10,
+                                  fine_tune_lr=1e-5)
