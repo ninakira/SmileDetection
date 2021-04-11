@@ -1,14 +1,15 @@
 import sys
 import tensorflow as tf
+from tensorflow.keras import layers
 from model_training import KerasTrain
 
 sys.path.append('../')
-import models.VGG_Face
+import models.EfficientNet
 from data_access import load_celeba
 from config import set_dynamic_memory_allocation
 
 
-class VGGTrainer:
+class EfficientNetTrainer:
     def __init__(self, train_dataset, validation_dataset):
         self.model = None
         self.base = None
@@ -28,8 +29,9 @@ class VGGTrainer:
                         frozen_lr,
                         fine_tune_epochs,
                         fine_tune_lr):
-        vgg = models.VGG_Face.VGGFace()
-        self.model = vgg.model
+        efficient_net = models.EfficientNet.EfficientNetV0()
+        self.model = efficient_net.model
+        self.base = efficient_net.base
         self.set_trainer(self.model, name)
 
         self.train_frozen(frozen_epochs, frozen_lr)
@@ -41,8 +43,10 @@ class VGGTrainer:
         self.trainer.fit_model(epochs)
 
     def fine_tune(self, epochs, lr):
-        for layer in self.model.layers[:-1]:
-            layer.trainable = True
+        # We unfreeze the top 20 layers while leaving BatchNorm layers frozen
+        for layer in self.model.layers[-20:]:
+            if not isinstance(layer, layers.BatchNormalization):
+                layer.trainable = True
 
         histories = self.trainer.get_history()
         optimizer = tf.keras.optimizers.Adam(lr)
@@ -62,12 +66,12 @@ def main():
     set_dynamic_memory_allocation()
     celeba_train, celeba_validation = load_celeba()
 
-    vgg_trainer = VGGTrainer(celeba_train, celeba_validation)
-    vgg_trainer.train_new_model(name="VGG_face_pretrained_withfinetuning_final_celeba",
-                                frozen_epochs=20,
-                                frozen_lr=1e-4,
-                                fine_tune_epochs=100,
-                                fine_tune_lr=1e-5)
+    efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
+    efficient_net_trainer.train_new_model(name="EfficientNet_with_finetuning_final_celeba",
+                                          frozen_epochs=25,
+                                          frozen_lr=1e-4,
+                                          fine_tune_epochs=100,
+                                          fine_tune_lr=1e-5)
 
 
 if __name__ == "__main__":
