@@ -7,20 +7,20 @@ sys.path.append('../')
 from config import set_dynamic_memory_allocation
 
 
-DIR_DATA = "/data/celeba/original_celeba/celeba/test"
-DIR_AUGMENTED_DATA = "/data/celeba/final_celeba/test"
-START_INDEX = 0
-N_IMAGES = 10000
+DIR_DATA = "/data/genki/original_genki"
+DIR_PROCESSED_DATA = "/data/genki/face_detected_genki"
+START_INDEX = 1
+N_IMAGES = 4000
 
 
 def generate_images(dir_data,
-                    dir_augmented_data,
+                    dir_processed_data,
                     image_name_start_index,
                     n_images_to_generate):
 
     face_detector = FaceDetector()
     generator = AugmentedImageGenerator(dir_data,
-                                        dir_augmented_data,
+                                        dir_processed_data,
                                         generator_no_augment,
                                         face_detector,
                                         None)
@@ -29,4 +29,4 @@ def generate_images(dir_data,
 
 
 set_dynamic_memory_allocation()
-generate_images(DIR_DATA, DIR_AUGMENTED_DATA, START_INDEX, N_IMAGES)
+generate_images(DIR_DATA, DIR_PROCESSED_DATA, START_INDEX, N_IMAGES)

@@ -97,6 +97,8 @@ AUTOTUNE = tf.data.AUTOTUNE
 
 TRAIN_PATH = "/data/celeba/final_celeba/train"
 VALIDATION_PATH = "/data/celeba/final_celeba/validation"
+TEST_PATH_CELEBA = "/data/celeba/final_celeba/test"
+TEST_PATH_GENKI = "/data/celeba/final_celeba/test"
 IMG_SIZE = (128, 128)
 
 
@@ -115,3 +117,24 @@ def load_celeba(batch_size=128):
     validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)
 
     return train_dataset, validation_dataset
+
+
+def load_celeba_test(batch_size=128):
+    test_dataset = image_dataset_from_directory(TRAIN_PATH,
+                                                shuffle=True,
+                                                batch_size=batch_size,
+                                                image_size=IMG_SIZE)
+
+    test_dataset = test_dataset.prefetch(buffer_size=AUTOTUNE)
+
+    return test_dataset
+
+def load_genki_test(batch_size=128):
+    test_dataset = image_dataset_from_directory(TRAIN_PATH,
+                                                shuffle=True,
+                                                batch_size=batch_size,
+                                                image_size=IMG_SIZE)
+
+    test_dataset = test_dataset.prefetch(buffer_size=AUTOTUNE)
+
+    return test_dataset
