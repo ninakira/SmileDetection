@@ -66,9 +66,9 @@ set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_celeba()
 
 mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
-mobilenet_trainer.train_new_model(name="Mobilenet_flatten_layer",
+mobilenet_trainer.train_new_model(name="Mobilenet_flatten_layer+dropout",
                                   frozen_epochs=2,
                                   frozen_lr=1e-4,
                                   fine_tune_at=50,
-                                  fine_tune_epochs=10,
+                                  fine_tune_epochs=12,
                                   fine_tune_lr=1e-5)
