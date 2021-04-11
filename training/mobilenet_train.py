@@ -5,6 +5,7 @@ from model_training import KerasTrain
 sys.path.append('../')
 import models.MobileNetV3
 from data_access import load_celeba
+from model_test import load_model_by_checkpoint, test_model
 from config import set_dynamic_memory_allocation
 
 
@@ -31,6 +32,7 @@ class MobileNetTrainer:
                         fine_tune_lr):
         mobilenet = models.MobileNetV3.MobileNetV3()
         self.model = mobilenet.define_model()
+        print(self.model.summary())
         self.base = mobilenet.get_base()
         self.set_trainer(self.model, name)
 
@@ -72,3 +74,6 @@ mobilenet_trainer.train_new_model(name="Mobilenet_flatten_layer+dropout",
                                   fine_tune_at=50,
                                   fine_tune_epochs=12,
                                   fine_tune_lr=1e-5)
+
+trained_mobilenet = load_model_by_checkpoint("Mobilenet_flatten_layer+dropout", "cp-0005-0.18.ckpt")
+test_model(trained_mobilenet)
