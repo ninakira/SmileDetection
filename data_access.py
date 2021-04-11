@@ -80,47 +80,6 @@ class ImageDaoKerasBigData:
         )
 
 
-# class ImageDaoCustom:
-#     def __init__(self, data_path, height=224, width=224, valid_split=0.25, batch_size=128):
-#         self.data_path = data_path
-#         self.IMG_HEIGHT = height
-#         self.IMG_WIDTH = width
-#         self.valid_split = valid_split
-#         self.batch_size = batch_size
-#
-#         self.load_data()
-#
-#
-#     def load_data(self):
-#         self.data, self.labels = self.load_data_from_path(self.data_path)
-#
-#         x_train, x_test, y_train, y_test = train_test_split(self.data, self.labels, test_size=self.valid_split, random_state=42)
-#
-#         self.train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
-#         self.train_dataset = self.train_dataset.batch(self.batch_size)
-#
-#         self.test_dataset = tf.data.Dataset.from_tensor_slices((x_test, y_test))
-#         self.test_dataset = self.test_dataset.batch(self.batch_size)
-#
-#
-#     def load_data_from_path(self, img_folder):
-#         img_data_array = []
-#         class_name = []
-#
-#         for dir1 in os.listdir(img_folder):
-#             for file in os.listdir(os.path.join(img_folder, dir1)):
-#                 image_path = os.path.join(img_folder, dir1, file)
-#                 image = cv2.imread(image_path, cv2.COLOR_BGR2RGB)
-#                 image = cv2.resize(image, (self.IMG_HEIGHT, self.IMG_WIDTH), interpolation=cv2.INTER_AREA)
-#                 image = np.array(image)
-#                 image = image.astype('float32')
-#                 image /= 255
-#                 img_data_array.append(image)
-#                 class_name.append(dir1)
-#
-#         return img_data_array, class_name
-
-
 class DataExtractor:
     def __init__(self, data_path):
         self.data_path = data_path
@@ -134,7 +93,6 @@ class DataExtractor:
             zip_ref.extractall(str(path.parent) + "/unzipped_" + name)
 
 
-# Temporary working loader. Feel free to fix me
 AUTOTUNE = tf.data.AUTOTUNE
 
 TRAIN_PATH = "/data/celeba/final_celeba/train"

@@ -76,15 +76,13 @@ class KerasTrain:
                                                 restore_best_weights=True)
 
     def __get_cp_callback(self):
-        checkpoint_path = self.cp_dir + "weights.{epoch:02d}-{val_loss:.2f}.ckpt"
-        checkpoint_dir = os.path.dirname(checkpoint_path)
-        self.model.save_weights(checkpoint_path)
+        checkpoint_path = self.cp_dir + "cp-{epoch:04d}-{val_loss:.2f}.ckpt"
 
         return tf.keras.callbacks.ModelCheckpoint(
-            filepath=checkpoint_dir,
+            filepath=checkpoint_path,
             verbose=1,
-            save_weights_only=True,
-            save_freq="epoch")
+            save_weights_only=False,
+            save_freq='epoch')
 
     def __get_tb_callback(self):
         logdir = os.path.join(self.tb_dir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
