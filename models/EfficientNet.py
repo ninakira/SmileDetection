@@ -17,13 +17,13 @@ class EfficientNetV0:
         )
         inputs = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
         x = img_augmentation(inputs)
-        model = EfficientNetB0(include_top=False, input_tensor=x, weights="imagenet")
+        self.base = EfficientNetB0(include_top=False, input_tensor=x, weights="imagenet")
 
         # Freeze the pretrained weights
-        model.trainable = False
+        self.base.trainable = False
 
         # Rebuild top
-        x = layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
+        x = layers.GlobalAveragePooling2D(name="avg_pool")(self.base.output)
         x = layers.BatchNormalization()(x)
 
         top_dropout_rate = 0.2

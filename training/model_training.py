@@ -46,12 +46,13 @@ class KerasTrain:
                   epochs,
                   with_early_stop=False,
                   early_stop_patience=8,
-                  initial_epoch=0):
+                  initial_epoch=0,
+                  save_weights_only=False):
         callbacks = []
         if self.with_tensorboard:
             callbacks.append(self.__get_tb_callback())
         if self.with_cp_save:
-            callbacks.append(self.__get_cp_callback())
+            callbacks.append(self.__get_cp_callback(save_weights_only))
         if with_early_stop:
             callbacks.append(self.__get_early_stop_callback(early_stop_patience))
 
@@ -75,13 +76,13 @@ class KerasTrain:
                                                 patience=early_stop_patience,
                                                 restore_best_weights=True)
 
-    def __get_cp_callback(self):
+    def __get_cp_callback(self, save_weights_only=False):
         checkpoint_path = self.cp_dir + "cp-{epoch:04d}-{val_loss:.2f}.ckpt"
 
         return tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_path,
             verbose=1,
-            save_weights_only=False,
+            save_weights_only=save_weights_only,
             save_freq='epoch')
 
     def __get_tb_callback(self):
