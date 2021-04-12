@@ -69,10 +69,10 @@ celeba_train, celeba_validation = load_celeba()
 
 mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
 mobilenet_trainer.train_new_model(name="Mobilenet։ 2",
-                                  frozen_epochs=3,
+                                  frozen_epochs=10,
                                   frozen_lr=1e-4,
                                   fine_tune_at=150,
-                                  fine_tune_epochs=5,
+                                  fine_tune_epochs=50,
                                   fine_tune_lr=1e-5)
 
 
