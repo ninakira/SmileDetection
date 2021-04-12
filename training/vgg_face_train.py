@@ -65,7 +65,7 @@ celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
 
 vgg_trainer = VGGTrainer(celeba_train, celeba_validation)
 vgg_trainer.train_new_model(name="VGG_face_pretrained_withfinetuning_final_celeba",
-                            frozen_epochs=20,
+                            frozen_epochs=5,
                             frozen_lr=1e-4,
-                            fine_tune_epochs=100,
+                            fine_tune_epochs=10,
                             fine_tune_lr=1e-5)

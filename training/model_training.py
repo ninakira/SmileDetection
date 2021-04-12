@@ -45,7 +45,7 @@ class KerasTrain:
     def fit_model(self,
                   epochs,
                   with_early_stop=False,
-                  early_stop_patience=8,
+                  early_stop_patience=2,
                   initial_epoch=0,
                   save_weights_only=False):
         callbacks = []
