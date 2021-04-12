@@ -35,7 +35,7 @@ class EfficientNetTrainer:
         self.set_trainer(self.model, name)
 
         self.model.load_weights("/home/aca1/code/SavedModels/EfficientNet_with_finetuning_final_celeba/checkpoints/cp-0020-0.38.ckpt")
-        self.trainer.save_model()
+        # self.trainer.save_model()
 
         # self.train_frozen(frozen_epochs, frozen_lr)
         self.fine_tune(fine_tune_epochs, fine_tune_lr)
