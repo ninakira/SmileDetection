@@ -72,7 +72,7 @@ set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
 
 efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
-efficient_net_trainer.train_new_model(name="EfficientNet_with_finetuning_final_celeba",
+efficient_net_trainer.train_new_model(name="EfficientNet_only_finetuning_final_celeba",
                                       frozen_epochs=25,
                                       frozen_lr=1e-4,
                                       fine_tune_epochs=25,
