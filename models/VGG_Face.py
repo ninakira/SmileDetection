@@ -52,7 +52,7 @@ class VGGFace:
         model.add(Flatten())
         model.add(Activation('softmax'))
 
-        model.load_weights('pretrained_weights/vgg_face_weights.h5')
+        model.load_weights('../pretrained_weights/vgg_face_weights.h5')
         model.pop()
         model.add(Dense(1))
         for layer in model.layers[:-1]:

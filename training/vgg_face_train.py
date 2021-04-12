@@ -58,8 +58,10 @@ class VGGTrainer:
         self.trainer.fit_model(epochs)
 
 
+IMG_SIZE = (224, 224)
+
 set_dynamic_memory_allocation()
-celeba_train, celeba_validation = load_celeba()
+celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
 
 vgg_trainer = VGGTrainer(celeba_train, celeba_validation)
 vgg_trainer.train_new_model(name="VGG_face_pretrained_withfinetuning_final_celeba",

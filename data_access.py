@@ -104,16 +104,16 @@ TEST_PATH_GENKI = "/data/genki/face_detected_genki"
 IMG_SIZE = (128, 128)
 
 
-def load_celeba(batch_size=128):
+def load_celeba(batch_size=128, img_size=IMG_SIZE):
     train_dataset = image_dataset_from_directory(TRAIN_PATH,
                                                  shuffle=True,
                                                  batch_size=batch_size,
-                                                 image_size=IMG_SIZE)
+                                                 image_size=img_size)
 
     validation_dataset = image_dataset_from_directory(VALIDATION_PATH,
                                                       shuffle=True,
                                                       batch_size=batch_size,
-                                                      image_size=IMG_SIZE)
+                                                      image_size=img_size)
 
     train_dataset = train_dataset.prefetch(buffer_size=AUTOTUNE)
     validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)

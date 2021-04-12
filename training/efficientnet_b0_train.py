@@ -40,7 +40,7 @@ class EfficientNetTrainer:
     def train_frozen(self, epochs, lr):
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_model(epochs)
+        self.trainer.fit_model(epochs, save_weights_only=True)
 
     def fine_tune(self, epochs, lr):
         # We unfreeze the top 20 layers while leaving BatchNorm layers frozen
@@ -51,7 +51,7 @@ class EfficientNetTrainer:
         histories = self.trainer.get_history()
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_model(epochs, initial_epoch=histories[-1].epoch[-1])
+        self.trainer.fit_model(epochs, initial_epoch=histories[-1].epoch[-1], save_weights_only=True)
 
     def train_saved_model(self, name, path, epochs, lr):
         reconstructed_model = tf.keras.models.load_model(path)
@@ -62,8 +62,10 @@ class EfficientNetTrainer:
         self.trainer.fit_model(epochs)
 
 
+IMG_SIZE = (224, 224)
+
 set_dynamic_memory_allocation()
-celeba_train, celeba_validation = load_celeba()
+celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
 
 efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
 efficient_net_trainer.train_new_model(name="EfficientNet_with_finetuning_final_celeba",
