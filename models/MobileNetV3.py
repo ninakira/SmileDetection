@@ -15,7 +15,7 @@ class MobileNetV3:
         inputs = tf.keras.Input(shape=IMG_SHAPE)
         x = self.preprocess_input(inputs)
         x = self.base_model(x, training=False)
-        x = tf.keras.layers.Flatten()(x)
+        x = tf.keras.layers.GlobalAvgPool2D()(x)
         x = tf.keras.layers.Dropout(0.4)(x)
 
         x = tf.keras.layers.Dense(1028)(x)
