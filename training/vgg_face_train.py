@@ -38,7 +38,7 @@ class VGGTrainer:
     def train_frozen(self, epochs, lr):
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_model(epochs)
+        self.trainer.fit_model(epochs, with_early_stop=True)
 
     def fine_tune(self, epochs, lr):
         for layer in self.model.layers[:-1]:
@@ -47,7 +47,7 @@ class VGGTrainer:
         histories = self.trainer.get_history()
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_model(epochs, initial_epoch=histories[-1].epoch[-1])
+        self.trainer.fit_model(epochs, with_early_stop=True, initial_epoch=histories[-1].epoch[-1])
 
     def train_saved_model(self, name, path, epochs, lr):
         reconstructed_model = tf.keras.models.load_model(path)
