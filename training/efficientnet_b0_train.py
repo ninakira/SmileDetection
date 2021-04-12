@@ -55,8 +55,7 @@ class EfficientNetTrainer:
         histories = self.trainer.get_history()
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
-        self.trainer.fit_model(epochs, initial_epoch=histories[-1].epoch[-1],
-                               save_weights_only=True, with_early_stop=True,)
+        self.trainer.fit_model(epochs, save_weights_only=True, with_early_stop=True,)
 
     def train_saved_model(self, name, path, epochs, lr):
         reconstructed_model = tf.keras.models.load_model(path)
