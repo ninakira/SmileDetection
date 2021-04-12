@@ -34,7 +34,10 @@ class EfficientNetTrainer:
         self.base = efficient_net.base
         self.set_trainer(self.model, name)
 
-        self.train_frozen(frozen_epochs, frozen_lr)
+        self.model.load_weights("/home/aca1/code/SavedModels/EfficientNet_with_finetuning_final_celeba/checkpoints/cp-0020-0.38.ckpt")
+        self.trainer.save_model()
+
+        # self.train_frozen(frozen_epochs, frozen_lr)
         self.fine_tune(fine_tune_epochs, fine_tune_lr)
 
     def train_frozen(self, epochs, lr):
@@ -44,6 +47,7 @@ class EfficientNetTrainer:
 
     def fine_tune(self, epochs, lr):
         # We unfreeze the top 20 layers while leaving BatchNorm layers frozen
+
         for layer in self.model.layers[-20:]:
             if not isinstance(layer, layers.BatchNormalization):
                 layer.trainable = True
@@ -71,5 +75,5 @@ efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
 efficient_net_trainer.train_new_model(name="EfficientNet_with_finetuning_final_celeba",
                                       frozen_epochs=25,
                                       frozen_lr=1e-4,
-                                      fine_tune_epochs=100,
+                                      fine_tune_epochs=25,
                                       fine_tune_lr=1e-5)

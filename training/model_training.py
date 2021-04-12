@@ -68,6 +68,10 @@ class KerasTrain:
         self.__save_model(self.current_fit)
         self.current_fit += 1
 
+    def save_model(self):
+        self.__save_model(self.current_fit)
+        self.current_fit += 1
+
     def __save_model(self, fit_n):
         self.model.save(self.save_path + "SavedModel/{}".format(fit_n))
 
