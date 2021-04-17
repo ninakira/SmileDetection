@@ -1,16 +1,15 @@
 import sys
 from NoFaceDetector import NoFaceDetector
-from AugmentedImageGenerator import AugmentedImageGenerator
-from all_augmenters import generator_before_face_detection, augmenter_after_face_detection
-
+from NoFaceImageGenerator import NoFaceImageGenerator
+from all_augmenters import generator_no_augment
 sys.path.append('../')
 from config import set_dynamic_memory_allocation
 
 
 DIR_DATA = "/data/noface/lsun/"
 DIR_PROCESSED_DATA = "/data/noface/augmented_lsun"
-START_INDEX = 400001
-N_IMAGES = 650000
+START_INDEX = 0
+N_IMAGES = 130000
 
 
 def generate_images(dir_data,
@@ -19,11 +18,11 @@ def generate_images(dir_data,
                     n_images_to_generate):
 
     no_face_detector = NoFaceDetector()
-    generator = AugmentedImageGenerator(dir_data,
+    generator = NoFaceImageGenerator(dir_data,
                                         dir_processed_data,
-                                        generator_before_face_detection,
+                                        generator_no_augment,
                                         no_face_detector,
-                                        augmenter_after_face_detection,
+                                        generator_no_augment,
                                         shuffle=True
                                         )
 
