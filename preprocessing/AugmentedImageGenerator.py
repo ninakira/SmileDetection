@@ -31,7 +31,7 @@ class AugmentedImageGenerator:
                                      batch_size=1,
                                      class_mode='binary',
                                      shuffle=self.shuffle):
-            self.save_image(image[0], label,'orig')
+            self.save_image(image[0], label,'orig') #saving the original imige with 'orig' suffix 
             processed_image = self.process_image(image[0])
             if processed_image is None:
                 self.n_corrupted_images += 1
@@ -59,20 +59,18 @@ class AugmentedImageGenerator:
 
         return resulting_image
 
-    def detect_face(self, image):
-        
+    def detect_face(self, image):    
         converted_image = np.array(image, dtype='uint8')
         faces = self.face_detector.detect_faces(converted_image)
-        print(type(faces))
         if faces is None:
             return
 
         return faces
 
 
-    def save_image(self, face, label,orig = ''):
+    def save_image(self, img, label,orig = ''):
         #try:
-        resized = cv2.resize(face, (256, 256), interpolation=cv2.INTER_AREA)
+        resized = cv2.resize(img, (256, 256), interpolation=cv2.INTER_AREA)
         converted_label = str(int(label))
         image_index = str(self.n_saved_images + self.start_index)
         name = f'{self.dir_augmented_data}/{converted_label}/{image_index+orig}.jpg'
