@@ -72,7 +72,7 @@ mobilenet_trainer.train_new_model(name="Mobilenet։ 2",
                                   frozen_epochs=10,
                                   frozen_lr=1e-4,
                                   fine_tune_at=150,
-                                  fine_tune_epochs=50,
+                                  fine_tune_epochs=20,
                                   fine_tune_lr=1e-5)
 
 

@@ -13,12 +13,12 @@ generator_no_augment = ImageDataGenerator()
 
 
 def augmenter_after_face_detection(image):
-    transform = A.Compose([
+    transform = A.ReplayCompose([
         A.OneOf([
             A.MotionBlur(p=.2),
             A.MedianBlur(blur_limit=3, p=0.1),
             A.Blur(blur_limit=3, p=0.1),
-        ], p=0.2),
+        ], p=0.5),
         A.OneOf([
             A.IAASharpen(),
             A.RandomBrightnessContrast(),
@@ -26,5 +26,7 @@ def augmenter_after_face_detection(image):
         A.HueSaturationValue(p=0.2, hue_shift_limit=10),
         A.GaussNoise(p=0.2),
     ])
-
-    return transform(image=image)['image']
+    tr = transform(image=image)
+    image = tr['image']
+    print(tr['replay'])
+    return image
