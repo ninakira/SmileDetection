@@ -1,5 +1,7 @@
 import cv2
-from face_detector import HaarCascadeDetector, DlibDetector, MTCNNDetector
+import numpy as np
+import tensorflow as tf
+from face_detector import HaarCascadeDetector, DlibHAGDetector, MTCNNDetector
 from preprocessor import BasicPreprocessor
 from config import get_label_text
 
@@ -13,7 +15,7 @@ class VideoDemo:
         self.detector = detector
         self.preprocessor = preprocessor
 
-    def process_video(self, file_path=None):
+    def process_video(self, file_path=None, scale=True):
         assert file_path is not None
 
         cap = cv2.VideoCapture(file_path)
@@ -29,12 +31,14 @@ class VideoDemo:
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (71, 53, 6), 1)  # draw rectangle to main image
 
                     detected_face = frame[int(y):int(y + h), int(x):int(x + w)]  # crop detected face
-                    processed_img = self.preprocessor.get_preprocessed_img(detected_face)
+                    processed_img = self.preprocessor.get_preprocessed_img(detected_face, scale)
 
-                    # prediction = self.model.predict(processed_img)[0, :]
-                    prediction = 0
+                    img = np.expand_dims(processed_img, axis=0)
+                    prediction = self.model.predict(img)[0, :]
+                    label = 1 if prediction[0] > 0 else 0
 
-                    cv2.putText(frame, get_label_text(prediction),
+                    cv2.putText(frame,
+                                get_label_text(label),
                                 (int(x + w + 5), int(y - 12)),
                                 cv2.FONT_HERSHEY_DUPLEX,
                                 0.5, (255, 255, 255), 1)
@@ -54,11 +58,13 @@ class VideoDemo:
 
 
 haar = HaarCascadeDetector()
-dlib = DlibDetector()
+dlib = DlibHAGDetector()
 mtcnn = MTCNNDetector()
 
 proc = BasicPreprocessor(size=(128, 128))
 
-camera = VideoDemo(detector=dlib, preprocessor=proc)
-camera.process_video('demo_data/Friends.mp4')
-# camera.process_video('demo_data/Friends_long.mp4')
+model = tf.keras.models.load_model('tf_logs/Mobilenet3/SavedModel/1')
+
+camera = VideoDemo(model=model, detector=haar, preprocessor=proc)
+# camera.process_video('demo_data/Friends.mp4', False)
+camera.process_video('demo_data/smiling.mp4', False)

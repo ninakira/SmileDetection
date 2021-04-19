@@ -5,8 +5,8 @@ from model_training import KerasTrain
 
 sys.path.append('../')
 import models.EfficientNet
-from data_access import load_celeba
-from config import set_dynamic_memory_allocation
+# from data_access import load_celeba
+# from config import set_dynamic_memory_allocation
 
 
 class EfficientNetTrainer:
@@ -34,7 +34,7 @@ class EfficientNetTrainer:
         self.base = efficient_net.base
         self.set_trainer(self.model, name)
 
-        self.model.load_weights("/home/aca1/code/SavedModels/EfficientNet_with_finetuning_final_celeba/checkpoints/cp-0020-0.38.ckpt")
+        self.model.load_weights("/home/aca1/code/SavedModels/EfficientNet_only_finetuning2_final_celeba/checkpoints/cp-0020-0.38.ckpt")
         # self.trainer.save_model()
 
         # self.train_frozen(frozen_epochs, frozen_lr)
@@ -66,14 +66,22 @@ class EfficientNetTrainer:
         self.trainer.fit_model(epochs)
 
 
-IMG_SIZE = (224, 224)
+# IMG_SIZE = (224, 224)
+#
+# set_dynamic_memory_allocation()
+# celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
+#
+# efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
+# efficient_net_trainer.train_new_model(name="EfficientNet_only_finetuning2_final_celeba",
+#                                       frozen_epochs=25,
+#                                       frozen_lr=1e-4,
+#                                       fine_tune_epochs=30,
+#                                       fine_tune_lr=1e-5)
+#
 
-set_dynamic_memory_allocation()
-celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
-
-efficient_net_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
-efficient_net_trainer.train_new_model(name="EfficientNet_only_finetuning2_final_celeba",
-                                      frozen_epochs=25,
-                                      frozen_lr=1e-4,
-                                      fine_tune_epochs=30,
-                                      fine_tune_lr=1e-5)
+efficient_net = models.EfficientNet.EfficientNetV0()
+model = efficient_net.model
+op = tf.keras.optimizers.Adam(0.0001)
+model.compile(op, tf.keras.losses.BinaryCrossentropy(True), ["accuracy"])
+model.load_weights("../tf_logs/EfficientNet_only_finetuning2_final_celeba/checkpoints/cp-0003-0.18.ckpt")
+# model.save("SAVED/EFF/")

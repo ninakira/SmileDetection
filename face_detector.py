@@ -17,7 +17,7 @@ class HaarCascadeDetector(FaceDetector):
         return self.detector.detectMultiScale(img, 1.3, 6)
 
 
-class DlibDetector(FaceDetector):
+class DlibHAGDetector(FaceDetector):
     def __init__(self):
         self.detector = dlib.get_frontal_face_detector()
 

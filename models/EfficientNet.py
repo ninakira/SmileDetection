@@ -16,8 +16,9 @@ class EfficientNetV0:
             name="img_augmentation",
         )
         inputs = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
-        x = img_augmentation(inputs)
-        self.base = EfficientNetB0(include_top=False, input_tensor=x, weights="imagenet")
+
+        # x = img_augmentation(inputs)
+        self.base = EfficientNetB0(include_top=False, input_tensor=inputs, weights="imagenet")
 
         # Freeze the pretrained weights
         self.base.trainable = False
