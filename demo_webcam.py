@@ -12,7 +12,7 @@ def get_label_text(label=None):
     return switcher.get(label, "Invalid label")
 
 
-class CameraCapture:
+class CameraDemo:
     def __init__(self,
                  detector=None,
                  model=None,
@@ -49,6 +49,8 @@ class CameraCapture:
 
             if cv2.waitKey(1) == 13:  # 13 is the Enter Key
                 break
+            else:
+                pass
 
         # Close openCV video capture imshow
         cap.release()
@@ -61,5 +63,5 @@ mtcnn = MTCNNDetector()
 
 proc = BasicPreprocessor(size=(128, 128))
 
-camera = CameraCapture(detector=dlib, preprocessor=proc)
+camera = CameraDemo(detector=dlib, preprocessor=proc)
 camera.start_camera()
