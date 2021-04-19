@@ -2,6 +2,16 @@ import tensorflow as tf
 DATA_PATH = "/data/"
 
 
+def get_label_text(label=None):
+    assert label is not None
+
+    switcher = {
+        0: 'No Smile',
+        1: 'Smile!',
+    }
+    return switcher.get(label, 'Invalid label')
+
+
 def get_train_valid_paths(dir_name):
     return f"{DATA_PATH}{dir_name}/train", f"{DATA_PATH}{dir_name}/validation"
 

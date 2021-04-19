@@ -1,17 +1,7 @@
 import cv2
-import numpy as np
-from tensorflow.keras.preprocessing import image
 from face_detector import HaarCascadeDetector, DlibDetector, MTCNNDetector
 from preprocessor import BasicPreprocessor
-
-
-def get_label_text(label=None):
-    assert label is not None
-    switcher = {
-        0: "No Smile",
-        1: "Smile!",
-    }
-    return switcher.get(label, "Invalid label")
+from config import get_label_text
 
 
 class VideoDemo:
@@ -27,7 +17,6 @@ class VideoDemo:
         assert file_path is not None
 
         cap = cv2.VideoCapture(file_path)
-        frame_count = 0
 
         while True:
             ret, frame = cap.read()
@@ -40,13 +29,9 @@ class VideoDemo:
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (71, 53, 6), 1)  # draw rectangle to main image
 
                     detected_face = frame[int(y):int(y + h), int(x):int(x + w)]  # crop detected face
-                    detected_face = cv2.resize(detected_face, (224, 224))  # resize to 224x224
+                    processed_img = self.preprocessor.get_preprocessed_img(detected_face)
 
-                    img_pixels = image.img_to_array(detected_face)
-                    img_pixels = np.expand_dims(img_pixels, axis=0)
-                    img_pixels /= 255
-
-                    # captured_representation = model.predict(img_pixels)[0, :]
+                    # prediction = self.model.predict(processed_img)[0, :]
                     prediction = 0
 
                     cv2.putText(frame, get_label_text(prediction),
@@ -64,7 +49,6 @@ class VideoDemo:
             else:
                 pass
 
-        # Close openCV video capture imshow
         cap.release()
         cv2.destroyAllWindows()
 
@@ -76,5 +60,5 @@ mtcnn = MTCNNDetector()
 proc = BasicPreprocessor(size=(128, 128))
 
 camera = VideoDemo(detector=dlib, preprocessor=proc)
-camera.process_video('Friends.mp4')
-# camera.process_video('Friends_long.mp4')
+camera.process_video('demo_data/Friends.mp4')
+# camera.process_video('demo_data/Friends_long.mp4')
