@@ -38,7 +38,7 @@ class KerasTrain:
                       from_logits=True,
                       metrics=["accuracy"]):
         if loss is None:
-            loss = tf.keras.losses.BinaryCrossentropy(from_logits)
+            loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits)
 
         self.model.compile(optimizer, loss, metrics)
 

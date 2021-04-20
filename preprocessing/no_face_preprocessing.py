@@ -6,10 +6,10 @@ sys.path.append('../')
 from config import set_dynamic_memory_allocation
 
 
-DIR_DATA = "/data/noface/lsun/"
-DIR_PROCESSED_DATA = "/data/noface/augmented_lsun"
+DIR_DATA = "/data/noface/test/"
+DIR_PROCESSED_DATA = "/data/noface/augmented_test"
 START_INDEX = 0
-N_IMAGES = 130000
+N_IMAGES = 5000
 
 
 def generate_images(dir_data,

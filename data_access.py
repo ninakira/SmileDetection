@@ -31,7 +31,7 @@ class ImageDaoKeras:
         return tf.keras.preprocessing.image_dataset_from_directory(
             data_path,
             labels="inferred",
-            label_mode="binary",
+            #label_mode="binary",
             color_mode=self.color_format,
             batch_size=self.batch_size,
             image_size=(self.IMG_HEIGHT, self.IMG_WIDTH),
@@ -101,7 +101,11 @@ VALIDATION_PATH = "/data/celeba/final_celeba/validation"
 TEST_PATH_CELEBA = "/data/celeba/final_celeba/test"
 TEST_PATH_GENKI = "/data/genki/face_detected_genki"
 
+TRAIN_PATH_3CLASS_CELEBA = "/data/celeba/non_face_detected_celeba/train"
+VALIDATION_PATH_3CLASS_CELEBA =  "/data/celeba/non_face_detected_celeba/validation"
+
 IMG_SIZE = (128, 128)
+IMG_SIZE_3CLASS = (256, 256)
 
 
 def load_celeba(batch_size=128, img_size=IMG_SIZE):
@@ -141,3 +145,16 @@ def load_genki_test(batch_size=128):
     test_dataset = test_dataset.prefetch(buffer_size=AUTOTUNE)
 
     return test_dataset
+
+def load_celeba_3classes_train(batch_size=100):
+    dao = ImageDaoKeras(data_path=TRAIN_PATH_3CLASS_CELEBA, 
+                        height=96,
+                        width=96,
+                        batch_size=128,
+                        color_format="rgb")
+    train_dataset, validation_dataset = dao.train_dataset, dao.valid_dataset
+
+    train_dataset = train_dataset.prefetch(buffer_size=AUTOTUNE)
+    validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)
+
+    return train_dataset, validation_dataset

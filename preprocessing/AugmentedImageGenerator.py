@@ -31,7 +31,7 @@ class AugmentedImageGenerator:
                                      batch_size=1,
                                      class_mode='binary',
                                      shuffle=self.shuffle):
-            self.save_image(image[0], label,'orig') #saving the original imige with 'orig' suffix 
+            #self.save_image(image[0], label,'orig') #saving the original imige with 'orig' suffix 
             processed_image = self.process_image(image[0])
             if processed_image is None:
                 self.n_corrupted_images += 1
