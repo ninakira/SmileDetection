@@ -5,7 +5,6 @@ from model_training import KerasTrain
 sys.path.append('../')
 import models.MobileNetV3
 from data_access import load_celeba
-from model_test import load_model_by_checkpoint, test_model
 from config import set_dynamic_memory_allocation
 
 
@@ -68,7 +67,7 @@ set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_celeba()
 
 mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
-mobilenet_trainer.train_new_model(name="Mobilenet։ 2",
+mobilenet_trainer.train_new_model(name="Mobilenet_Small1",
                                   frozen_epochs=10,
                                   frozen_lr=1e-4,
                                   fine_tune_at=150,
