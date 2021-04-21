@@ -6,7 +6,7 @@ IMG_SHAPE = (128, 128, 3)
 class MobileNetV3:
     def __init__(self):
         self.preprocess_input = tf.keras.applications.mobilenet_v3.preprocess_input
-        self.base_model = tf.keras.applications.MobileNetV3Large(input_shape=IMG_SHAPE,
+        self.base_model = tf.keras.applications.MobileNetV3Small(input_shape=IMG_SHAPE,
                                                                  include_top=False,
                                                                  weights='imagenet')
         self.base_model.trainable = False

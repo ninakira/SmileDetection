@@ -1,5 +1,9 @@
 import tensorflow as tf
-DATA_PATH = "/data/"
+
+
+DATA_PATH = '/data'
+SAVED_MODELS_PATH = '/home/aca1/code/SavedModels'
+TFLITE_MODELS_PATH = '/home/aca1/code/TFLiteModels'
 
 
 def get_label_text(label=None):
@@ -13,7 +17,7 @@ def get_label_text(label=None):
 
 
 def get_train_valid_paths(dir_name):
-    return f"{DATA_PATH}{dir_name}/train", f"{DATA_PATH}{dir_name}/validation"
+    return f"{DATA_PATH}/{dir_name}/train", f"{DATA_PATH}{dir_name}/validation"
 
 
 def set_dynamic_memory_allocation():
