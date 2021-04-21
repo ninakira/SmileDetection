@@ -8,7 +8,7 @@ from config import set_dynamic_memory_allocation
 
 
 DIR_DATA = "/data/celeba/original_celeba/celeba/train"
-DIR_PROCESSED_DATA = "/data/celeba/non_face_detected_celeba/test copy"
+DIR_PROCESSED_DATA = "/data/celeba/non_face_detected_celeba/test_lilit"
 START_INDEX = 1
 N_IMAGES = 40
 

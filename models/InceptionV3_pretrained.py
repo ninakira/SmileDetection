@@ -7,7 +7,7 @@ Created on Tue Mar 30 00:43:34 2021
 """
 
 from tensorflow.keras.applications import inception_v3
-from tensorflow.keras.models       import Model
+from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, experimental, Dropout
 from tensorflow.keras import Input, Sequential
 

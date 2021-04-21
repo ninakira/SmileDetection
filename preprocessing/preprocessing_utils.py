@@ -4,6 +4,9 @@ import zipfile
 from pathlib import Path
 from shutil import copyfile, move
 from keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
 
 
 def move_or_copy_files(source, destination, operation="copy", n_images_to_operate=None):
@@ -39,3 +42,18 @@ def extract_zip(zip_path):
         path = Path(zip_path)
         name = os.path.basename(path).split('.')[0]
         zip_ref.extractall(str(path.parent) + "/unzipped_" + name)
+
+def sample_n_imgs(n):
+    files = np.random.choice(os.listdir('/data/celeba/final_celeba/train/0'), size = n)
+    print(files.shape)
+    for f in files:
+        print(f)
+        image = cv2.imread(f'/data/celeba/final_celeba/train/0/{f}')
+        print(image)
+        plt.imsave(f'/data/celeba/final_celeba/sample/{f}', image)
+
+def remove_pics():
+    files = os.listdir('/data/noface')
+    for f in files:
+        if f[-3:] == 'jpg':
+            os.remove(f'/data/noface/{f}')
