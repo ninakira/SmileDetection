@@ -81,7 +81,8 @@ class KerasTrain:
                                                 restore_best_weights=True)
 
     def __get_cp_callback(self, save_weights_only=False):
-        checkpoint_path = self.cp_dir + "cp-{epoch:04d}-{val_loss:.2f}.ckpt"
+        checkpoint_name = 'cp-{epoch:04d}-{val_loss:.2f}.ckpt'
+        checkpoint_path = f'{self.cp_dir}/{self.current_fit}/{checkpoint_name}'
 
         return tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_path,
