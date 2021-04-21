@@ -11,13 +11,8 @@ IMG_SIZE = 224
 class EfficientNetV0:
 
     def __init__(self):
-        img_augmentation = Sequential(
-            [],
-            name="img_augmentation",
-        )
         inputs = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
 
-        # x = img_augmentation(inputs)
         self.base = EfficientNetB0(include_top=False, input_tensor=inputs, weights="imagenet")
 
         # Freeze the pretrained weights
@@ -31,4 +26,4 @@ class EfficientNetV0:
         x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
         outputs = tf.keras.layers.Dense(1)(x)
 
-        self.model = tf.keras.Model(inputs, outputs, name="EfficientNet")
+        self.model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")
