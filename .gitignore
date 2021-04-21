@@ -137,3 +137,5 @@ dmypy.json
 *.notes.txt
 
 tf_logs
+
+test-images
