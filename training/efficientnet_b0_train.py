@@ -2,13 +2,13 @@ import sys
 import tensorflow as tf
 from tensorflow.keras import layers
 from model_training import KerasTrain
-from inference.model_test import test_model
-from inference.model_load import load_saved_model
 
 sys.path.append('../')
 import models.EfficientNet
 from data_access import load_celeba
 from config import set_dynamic_memory_allocation
+from inference.model_test import test_model
+from inference.model_load import load_saved_model
 
 
 class EfficientNetTrainer:
