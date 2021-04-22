@@ -13,7 +13,7 @@ class KerasTrain:
                  with_cp_save=True,
                  cp_dir="checkpoints",
                  with_tensorboard=True,
-                 tb_dir="tf_logs/",
+                 tb_dir="tf_logs",
                  tb_hist_freq=10):
         self.model = model
         self.name = name
@@ -91,7 +91,7 @@ class KerasTrain:
             save_freq='epoch')
 
     def __get_tb_callback(self):
-        logdir = os.path.join(self.tb_dir, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        logdir = os.path.join(f"{self.tb_dir}/{self.current_fit}", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
         return tf.keras.callbacks.TensorBoard(logdir, histogram_freq=self.tb_hist_freq)
 
     def get_tensorlog_path(self):
