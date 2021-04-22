@@ -33,6 +33,7 @@ def test_model(model, img_size=(128, 128), model_name=None):
     out_f.close()
 
 
-set_dynamic_memory_allocation()
-model = load_model_by_checkpoint('MNasNet1', 'cp-0010-0.20.ckpt')
-test_model(model)
+if __name__ == "__main__":
+    set_dynamic_memory_allocation()
+    model = load_model_by_checkpoint('MNasNet1', 'cp-0010-0.20.ckpt')
+    test_model(model)
