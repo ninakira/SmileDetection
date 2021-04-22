@@ -7,7 +7,7 @@ from inference.model_load import load_model_by_checkpoint, load_saved_model
 from config import set_dynamic_memory_allocation
 
 
-def test_model(model, img_size=None, model_name=None):
+def test_model(model, img_size=(128, 128), model_name=None):
     celeba_test = load_celeba_test(img_size=img_size)
     genki_test = load_genki_test(img_size=img_size)
 
