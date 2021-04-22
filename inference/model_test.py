@@ -3,7 +3,7 @@ import time
 
 sys.path.append('../')
 from data_access import load_celeba_test, load_genki_test
-from model_load import load_model_by_checkpoint, load_saved_model
+from inference.model_load import load_model_by_checkpoint, load_saved_model
 from config import set_dynamic_memory_allocation
 
 

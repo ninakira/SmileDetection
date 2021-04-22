@@ -5,8 +5,6 @@ from model_training import KerasTrain
 
 sys.path.append('../')
 import models.EfficientNet
-from data_access import load_celeba
-from config import set_dynamic_memory_allocation
 from inference.model_test import test_model
 from inference.model_load import load_saved_model
 
