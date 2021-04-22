@@ -21,11 +21,11 @@ def test_model(model, img_size=(128, 128), model_name=None):
     celeba = f'Celeba test accuracy :{celeba_accuracy}'
     celeba_time = f'Celeba time: {toc - tic:0.4f}'
     genki = f'Genki test accuracy : {genki_accuracy}'
-    genki_time = f'Genki time: {tic - tac:0.4f}'
+    genki_time = f'Genki time: {tac - tic:0.4f}'
     # cpu = f'CPU usage percentage: {psutil.cpu_percent(interval=1)}'
     results = [celeba, celeba_time, genki, genki_time]
 
-    out_f = open(f"model_results/{model_name}_inference.txt", "w")
+    out_f = open(f"/home/aca1/code/model_results/{model_name}_inference.txt", "w")
     for res in results:
         print(res)
         out_f.write(res)
