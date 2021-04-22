@@ -121,22 +121,22 @@ def load_celeba(batch_size=128, img_size=IMG_SIZE):
     return train_dataset, validation_dataset
 
 
-def load_celeba_test(batch_size=128):
+def load_celeba_test(batch_size=128, img_size=(128, 128)):
     test_dataset = image_dataset_from_directory(TEST_PATH_CELEBA,
                                                 shuffle=False,
                                                 batch_size=batch_size,
-                                                image_size=IMG_SIZE)
+                                                image_size=img_size)
 
     test_dataset = test_dataset.prefetch(buffer_size=AUTOTUNE)
 
     return test_dataset
 
 
-def load_genki_test(batch_size=128):
+def load_genki_test(batch_size=128, img_size=(128, 128)):
     test_dataset = image_dataset_from_directory(TEST_PATH_GENKI,
                                                 shuffle=False,
                                                 batch_size=batch_size,
-                                                image_size=IMG_SIZE)
+                                                image_size=img_size)
 
     test_dataset = test_dataset.prefetch(buffer_size=AUTOTUNE)
 

@@ -11,7 +11,7 @@ class KerasTrain:
                  valid_data=None,
                  save_path="/home/aca1/code/SavedModels/",
                  with_cp_save=True,
-                 cp_dir="checkpoints/",
+                 cp_dir="checkpoints",
                  with_tensorboard=True,
                  tb_dir="tf_logs/",
                  tb_hist_freq=10):
