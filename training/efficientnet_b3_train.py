@@ -31,7 +31,7 @@ class EfficientNetTrainer:
                         frozen_lr,
                         fine_tune_epochs,
                         fine_tune_lr):
-        efficient_net = models.EfficientNet.EfficientNetV0()
+        efficient_net = models.EfficientNet.EfficientNetV3()
         self.model = efficient_net.model
         self.base = efficient_net.base
         self.set_trainer(self.model, name)
