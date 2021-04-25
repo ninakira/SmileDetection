@@ -17,8 +17,10 @@ def test_model(model, img_size=(128, 128), model_name=None):
     tic = time.perf_counter()
     celeba_loss, celeba_accuracy = model.evaluate(celeba_test, batch_size=64)
     celeba_cpu = p.cpu_percent() / psutil.cpu_count()
-
     toc = time.perf_counter()
+
+    p = psutil.Process()
+    p.cpu_percent(interval=None)
     genki_loss, genki_accuracy = model.evaluate(genki_test, batch_size=64)
     tac = time.perf_counter()
     genki_cpu = p.cpu_percent() / psutil.cpu_count()

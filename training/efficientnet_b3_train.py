@@ -1,11 +1,12 @@
 import sys
 import tensorflow as tf
+from tensorflow.keras import layers
 from model_training import KerasTrain, get_polymonial_scheduler
 
 sys.path.append('../')
 import models.EfficientNet
 from inference.model_load import load_saved_model
-from data_access import ImageDaoKerasBigData, TRAIN_PATH, VALIDATION_PATH
+from data_access import load_celeba
 from config import set_dynamic_memory_allocation
 
 
@@ -48,8 +49,9 @@ class EfficientNetTrainer:
         self.trainer.fit_model(epochs, with_early_stop=True, early_stop_patience=3, save_weights_only=False)
 
     def fine_tune(self, epochs, lr):
-        for layer in self.model.layers:
-            layer.trainable = True
+        for layer in self.trainer.model.layers:
+            if not isinstance(layer, layers.BatchNormalization):
+                layer.trainable = True
 
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
@@ -67,17 +69,17 @@ class EfficientNetTrainer:
         self.trainer.fit_model(epochs)
 
 
-IMG_SIZE = (224, 224)
+IMG_SIZE = (300, 300)
 
 set_dynamic_memory_allocation()
-dao = ImageDaoKerasBigData(train_path=TRAIN_PATH, validation_path=VALIDATION_PATH, img_size=IMG_SIZE)
-celeba_train, celeba_validation = dao.load_data()
+celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
 
 efficient_net3_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
-efficient_net3_trainer.train_new_model(name="EfficientNet_b3_celeba_1",
-                                      frozen_epochs=15,
+
+efficient_net3_trainer.train_new_model(name="EfficientNet_b3_celeba_final",
+                                      frozen_epochs=20,
                                       frozen_lr=1e-2,
-                                      fine_tune_epochs=20,
+                                      fine_tune_epochs=30,
                                       fine_tune_lr=1e-4)
 
 # efficient_net3_trainer.train_saved_model('EfficientNet_b3_celeba', 0, 20, 1e-5, False)

@@ -29,10 +29,13 @@ class EfficientNetV0:
         self.model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")
 
 
+IMG_SIZE_3 = 300
+
+
 class EfficientNetV3:
 
     def __init__(self):
-        inputs = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
+        inputs = layers.Input(shape=(IMG_SIZE_3, IMG_SIZE_3, 3))
 
         self.base = EfficientNetB3(include_top=False, input_tensor=inputs, weights="imagenet")
 

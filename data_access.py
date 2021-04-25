@@ -4,18 +4,17 @@ import zipfile
 from pathlib import Path
 from tensorflow.keras.preprocessing import image_dataset_from_directory
 
+AUTOTUNE = tf.data.AUTOTUNE
 
 class ImageDaoKeras:
     def __init__(self, data_path=None,
                  train_path=None,
                  validation_path=None,
-                 height=224,
-                 width=224,
+                 img_size=(224, 224),
                  valid_split=0.25,
                  batch_size=128,
                  color_format="rgb"):
-        self.IMG_HEIGHT = height
-        self.IMG_WIDTH = width
+        self.img_size = img_size
         self.valid_split = valid_split
         self.color_format = color_format
         self.batch_size = batch_size
@@ -34,7 +33,7 @@ class ImageDaoKeras:
             label_mode="binary",
             color_mode=self.color_format,
             batch_size=self.batch_size,
-            image_size=(self.IMG_HEIGHT, self.IMG_WIDTH),
+            image_size=self.img_size,
             shuffle=True,
             seed=42,
             validation_split=valid_split,
@@ -42,6 +41,11 @@ class ImageDaoKeras:
             interpolation="bilinear",
             follow_links=False,
         )
+
+    def load_data(self):
+        train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
+        validation_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
+        return train_dataset, validation_dataset
 
 
 class ImageDaoKerasBigData:
@@ -78,7 +82,9 @@ class ImageDaoKerasBigData:
         )
 
     def load_data(self):
-        return self.train_dataset, self.valid_dataset
+        train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
+        validation_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
+        return train_dataset, validation_dataset
 
 
 class DataExtractor:
@@ -92,9 +98,6 @@ class DataExtractor:
             path = Path(zip_path)
             name = os.path.basename(path).split('.')[0]
             zip_ref.extractall(str(path.parent) + "/unzipped_" + name)
-
-
-AUTOTUNE = tf.data.AUTOTUNE
 
 TRAIN_PATH = "/data/celeba/final_celeba/train"
 VALIDATION_PATH = "/data/celeba/final_celeba/validation"
