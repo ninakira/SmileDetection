@@ -45,15 +45,15 @@ class EfficientNetTrainer:
         self.trainer.fit_model(epochs, with_early_stop=True, early_stop_patience=3, save_weights_only=False)
 
     def fine_tune(self, epochs, lr):
-        for layer in self.model:
+        for layer in self.model.layers:
             layer.trainable = True
 
         optimizer = tf.keras.optimizers.Adam(lr)
         self.trainer.compile_model(optimizer)
         self.trainer.fit_model(epochs, with_early_stop=True, early_stop_patience=3, save_weights_only=False)
 
-    def train_saved_model(self, name, path, epochs, lr):
-        reconstructed_model = tf.keras.models.load_model(path)
+    def train_saved_model(self, name, fit, epochs, lr):
+        reconstructed_model = load_saved_model(name, fit)
         self.set_trainer(reconstructed_model, name)
 
         optimizer = tf.keras.optimizers.Adam(lr)
@@ -67,12 +67,14 @@ set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
 
 efficient_net3_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
-efficient_net3_trainer.train_new_model(name="EfficientNet_b3_celeba",
-                                      frozen_epochs=15,
-                                      frozen_lr=1e-3,
-                                      fine_tune_epochs=20,
-                                      fine_tune_lr=1e-5)
+# efficient_net3_trainer.train_new_model(name="EfficientNet_b3_celeba",
+#                                       frozen_epochs=15,
+#                                       frozen_lr=1e-3,
+#                                       fine_tune_epochs=20,
+#                                       fine_tune_lr=1e-5)
 
-# model = load_saved_model('EfficientNet_b3_celeba', 1)
+efficient_net3_trainer.train_saved_model('EfficientNet_b3_celeba', 1, 20, 1e-5)
+
+
 # test_model(model, img_size=IMG_SIZE, model_name='EfficientNet_b3_celeba')
 
