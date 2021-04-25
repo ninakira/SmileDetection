@@ -48,16 +48,14 @@ class ImageDaoKerasBigData:
     def __init__(self,
                  train_path=None,
                  validation_path=None,
-                 height=128,
-                 width=128,
+                 img_size=(128, 128),
                  valid_split=0.25,
                  batch_size=128,
                  color_format="rgb"):
         assert train_path is not None
         assert validation_path is not None
 
-        self.IMG_HEIGHT = height
-        self.IMG_WIDTH = width
+        self.img_size = img_size
         self.valid_split = valid_split
         self.color_format = color_format
         self.batch_size = batch_size
@@ -72,12 +70,15 @@ class ImageDaoKerasBigData:
             class_mode="binary",
             color_mode=self.color_format,
             batch_size=self.batch_size,
-            target_size=(self.IMG_HEIGHT, self.IMG_WIDTH),
+            target_size=self.img_size,
             shuffle=True,
             seed=42,
             interpolation="bilinear",
             follow_links=False,
         )
+
+    def load_data(self):
+        return self.train_dataset, self.valid_dataset
 
 
 class DataExtractor:

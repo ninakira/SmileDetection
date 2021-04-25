@@ -1,13 +1,11 @@
 import sys
 import tensorflow as tf
-from tensorflow.keras import layers
-from model_training import KerasTrain
+from model_training import KerasTrain, get_polymonial_scheduler
 
 sys.path.append('../')
 import models.EfficientNet
-from inference.model_test import test_model
 from inference.model_load import load_saved_model
-from data_access import load_celeba
+from data_access import ImageDaoKerasBigData, TRAIN_PATH, VALIDATION_PATH
 from config import set_dynamic_memory_allocation
 
 
@@ -36,8 +34,13 @@ class EfficientNetTrainer:
         self.base = efficient_net.base
         self.set_trainer(self.model, name)
 
-        self.train_frozen(frozen_epochs, frozen_lr)
-        self.fine_tune(fine_tune_epochs, fine_tune_lr)
+        ep1 = frozen_epochs // 2
+        self.train_frozen(ep1, frozen_lr)
+        self.train_frozen(frozen_epochs - ep1, frozen_lr*0.1)
+
+        epf1 = fine_tune_epochs // 2
+        self.fine_tune(epf1, fine_tune_lr)
+        self.fine_tune(fine_tune_epochs - epf1, fine_tune_lr*0.1)
 
     def train_frozen(self, epochs, lr):
         optimizer = tf.keras.optimizers.Adam(lr)
@@ -67,16 +70,17 @@ class EfficientNetTrainer:
 IMG_SIZE = (224, 224)
 
 set_dynamic_memory_allocation()
-celeba_train, celeba_validation = load_celeba(img_size=IMG_SIZE)
+dao = ImageDaoKerasBigData(train_path=TRAIN_PATH, validation_path=VALIDATION_PATH, img_size=IMG_SIZE)
+celeba_train, celeba_validation = dao.load_data()
 
 efficient_net3_trainer = EfficientNetTrainer(celeba_train, celeba_validation)
-# efficient_net3_trainer.train_new_model(name="EfficientNet_b3_celeba",
-#                                       frozen_epochs=15,
-#                                       frozen_lr=1e-3,
-#                                       fine_tune_epochs=20,
-#                                       fine_tune_lr=1e-5)
+efficient_net3_trainer.train_new_model(name="EfficientNet_b3_celeba_1",
+                                      frozen_epochs=15,
+                                      frozen_lr=1e-2,
+                                      fine_tune_epochs=20,
+                                      fine_tune_lr=1e-4)
 
-efficient_net3_trainer.train_saved_model('EfficientNet_b3_celeba', 0, 20, 1e-5, False)
+# efficient_net3_trainer.train_saved_model('EfficientNet_b3_celeba', 0, 20, 1e-5, False)
 
 
 # test_model(model, img_size=IMG_SIZE, model_name='EfficientNet_b3_celeba')
