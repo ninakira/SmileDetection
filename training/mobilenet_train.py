@@ -56,6 +56,8 @@ class MobileNetTrainer:
 
     def train_saved_model(self, name, path, epochs, lr):
         reconstructed_model = tf.keras.models.load_model(path)
+        for layer in reconstructed_model.layers[:100]:
+            layer.trainable = False
         self.set_trainer(reconstructed_model, name)
 
         optimizer = tf.keras.optimizers.Adam(lr)
@@ -65,13 +67,15 @@ class MobileNetTrainer:
 
 set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_celeba()
+PATH = '/home/aca1/code/SavedModels/Mobilenet_Small1/checkpoints/1/cp-0020-0.21.ckpt'
 
 mobilenet_trainer = MobileNetTrainer(celeba_train, celeba_validation)
-mobilenet_trainer.train_new_model(name="Mobilenet_Small1",
-                                  frozen_epochs=10,
-                                  frozen_lr=1e-4,
-                                  fine_tune_at=150,
-                                  fine_tune_epochs=20,
-                                  fine_tune_lr=1e-5)
+mobilenet_trainer.train_saved_model("Mobilenet_Small1-1", path=PATH, epochs=20, lr=5e-6)
+# mobilenet_trainer.train_new_model(name="Mobilenet_Small1",
+#                                   frozen_epochs=10,
+#                                   frozen_lr=1e-4,
+#                                   fine_tune_at=150,
+#                                   fine_tune_epochs=20,
+#                                   fine_tune_lr=1e-5)
 
 

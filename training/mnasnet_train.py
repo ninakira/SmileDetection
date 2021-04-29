@@ -41,9 +41,9 @@ class MNasNetTrainer:
 set_dynamic_memory_allocation()
 celeba_train, celeba_validation = load_celeba()
 
-MNASNET_TRAINED_PATH = '/home/aca1/code/SavedModels/MNasNet1/checkpoints/cp-0011-0.24.ckpt'
+MNASNET_TRAINED_PATH = '/home/aca1/code/SavedModels/MNasNet1/checkpoints//0/cp-0009-0.18.ckpt'
 mnasnet_trainer = MNasNetTrainer(celeba_train, celeba_validation)
-mnasnet_trainer.train_saved_model(name="MNasNet1",path=MNASNET_TRAINED_PATH, epochs=10, lr=0.0001)
+mnasnet_trainer.train_saved_model(name="MNasNet2",path=MNASNET_TRAINED_PATH, epochs=10, lr=0.0005)
 
 
 

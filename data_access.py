@@ -104,7 +104,7 @@ TEST_PATH_GENKI = "/data/genki/face_detected_genki"
 IMG_SIZE = (128, 128)
 
 
-def load_celeba(batch_size=128, img_size=IMG_SIZE):
+def load_celeba(batch_size=64, img_size=IMG_SIZE):
     train_dataset = image_dataset_from_directory(TRAIN_PATH,
                                                  shuffle=True,
                                                  batch_size=batch_size,
