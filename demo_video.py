@@ -8,6 +8,8 @@ from keras.models import load_model
 import time
 from demo_util import *
 
+FREQ = 3
+
 
 class VideoDemo:
     def __init__(self,
@@ -26,7 +28,7 @@ class VideoDemo:
         i = 0
         tic = time.perf_counter()
 
-        faces = {}
+        faces = []
         while True:
             i = i + 1
             ret, frame = cap.read()
@@ -41,11 +43,16 @@ class VideoDemo:
             blob = cv2.dnn.blobFromImage(frame, 1 / 255, (IMG_WIDTH, IMG_HEIGHT),
                                          [0, 0, 0], 1, crop=False)
 
-            if i % 3 == 0:
+            if i % FREQ == 0:
                 faces = self.detector.detect_faces(img=frame, blob=blob)
 
                 print('#' * 60)
                 print('[i] ==> # detected faces: {}'.format(len(faces)))
+
+                tac = time.perf_counter()
+                print(f"FRAME {i}; time: {tac - tic}")
+                print(f"SPF: {(tac - tic) / i}")
+                print(f"FPS: {i / (tac - tic)}")
 
             info = [
                 ('number of faces detected', '{}'.format(len(faces)))
@@ -69,11 +76,6 @@ class VideoDemo:
                 # label = 1 if prediction[0] > 0 else 0
 
             cv2.imshow('Video Smile Detection Demo', cv2.resize(frame, (int(frame.shape[1]/2), int(frame.shape[0]/2))))
-
-            tac = time.perf_counter()
-            print(f"FRAME {i}; time: {tac - tic}")
-            print(f"SPF: {(tac - tic) / i}")
-            print(f"FPS: {i / (tac - tic)}")
 
             if cv2.waitKey(1) == 13:  # 13 is the Enter Key
                 break

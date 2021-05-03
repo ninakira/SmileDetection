@@ -41,6 +41,7 @@ class MTCNNDetector(FaceDetector):
 
 
 yolo_model_path = './yolo3_tiny/face-yolov3-tiny.cfg'
+# Download weights from 'https://drive.google.com/file/d/1xG0QhxwWtyB17PKfifxHV9FPSck2z1Bk/view'
 yolo_weights_path = './yolo3_tiny/face-yolov3-tiny_41000.weights'
 
 
