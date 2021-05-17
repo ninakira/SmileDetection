@@ -13,6 +13,7 @@ COLOR_RED = (0, 0, 255)
 COLOR_WHITE = (255, 255, 255)
 COLOR_YELLOW = (0, 255, 255)
 
+
 def refined_box(left, top, width, height):
     right = left + width
     bottom = top + height

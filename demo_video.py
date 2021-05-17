@@ -1,14 +1,15 @@
+import sys
 import cv2
 import numpy as np
 import tensorflow as tf
-from face_detector import HaarCascadeDetector, DlibHAGDetector, MTCNNDetector, Yolo3Tiny
+from face_detector import HaarCascadeDetector, DlibHAGDetector, MTCNNDetector, Yolo3Tiny, MPFaceDetector
 from preprocessor import BasicPreprocessor
 from config import get_label_text
 from keras.models import load_model
 import time
 from demo_util import *
 
-FREQ = 3
+FREQ = 1
 
 
 class VideoDemo:
@@ -39,6 +40,14 @@ class VideoDemo:
                 cv2.waitKey(1000)
                 break
 
+            if frame is None:
+                break
+
+            print("FRAME", frame.shape)
+
+            # Re-size video to a smaller size to improve face detection speed
+            frame = cv2.resize(frame, (int(frame.shape[1]/3), int(frame.shape[0]/3)))
+
             # Create a 4D blob from a frame.
             blob = cv2.dnn.blobFromImage(frame, 1 / 255, (IMG_WIDTH, IMG_HEIGHT),
                                          [0, 0, 0], 1, crop=False)
@@ -67,7 +76,7 @@ class VideoDemo:
                 left, top, right, bottom = refined_box(face[0], face[1], face[2], face[3])
                 draw_predict(frame, left, top, right, bottom)
 
-                (x, y, w, h) = face
+                # (x, y, w, h) = face
                 # detected_face = frame[int(y):int(y + h), int(x):int(x + w)]  # crop detected face
                 # processed_img = self.preprocessor.get_preprocessed_img(detected_face, scale)
                 #
@@ -75,7 +84,8 @@ class VideoDemo:
                 # prediction = self.model.predict(img)[0, :]
                 # label = 1 if prediction[0] > 0 else 0
 
-            cv2.imshow('Video Smile Detection Demo', cv2.resize(frame, (int(frame.shape[1]/2), int(frame.shape[0]/2))))
+            # cv2.imshow('Video Smile Detection Demo', cv2.resize(frame, (int(frame.shape[1]), int(frame.shape[0]))))
+            cv2.imshow('Video Smile Detection Demo', frame)
 
             if cv2.waitKey(1) == 13:  # 13 is the Enter Key
                 break
@@ -90,15 +100,32 @@ haar = HaarCascadeDetector()
 dlib = DlibHAGDetector()
 mtcnn = MTCNNDetector()
 yolo = Yolo3Tiny()
+mp = MPFaceDetector()
 
 proc = BasicPreprocessor(size=(128, 128))
+detector = mp
 
 # model = tf.keras.models.load_model('tf_logs/Mobilenet3/SavedModel/1')
 
 # model_path = 'tf_logs/Mobilenet_Small1/checkpoints/1/1/cp-0019-0.21.ckpt'
 # model = load_model(model_path)
 
-camera = VideoDemo(model=None, detector=yolo, preprocessor=proc)
+print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", sys.argv[1:])
+args = sys.argv[1:]
+if len(args) > 0:
+    detector_arg = args[0]
+    if detector_arg == 'haar':
+        detector = haar
+    elif detector_arg == 'dlib':
+        detector = dlib
+    elif detector_arg == 'mtcnn':
+        detector = mtcnn
+    elif detector_arg == 'yolo':
+        detector = yolo
+    elif detector_arg == 'mediapipe':
+        detector = mp
+
+camera = VideoDemo(model=None, detector=detector, preprocessor=proc)
 # camera.process_video('demo_data/Friends.mp4', False)
 
 camera.process_video('demo_data/selfie.mp4', False)

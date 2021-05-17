@@ -140,6 +140,6 @@ tf_logs
 
 test-images
 
-yoloface/
+yoloface
 
 *.weights

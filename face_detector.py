@@ -1,7 +1,9 @@
 import cv2
 import dlib
 import numpy as np
+import math
 from mtcnn.mtcnn import MTCNN
+import mediapipe as mp
 from demo_util import *
 
 
@@ -33,11 +35,45 @@ class DlibHAGDetector(FaceDetector):
 
 class MTCNNDetector(FaceDetector):
     def __init__(self):
+        super().__init__()
         self.detector = MTCNN()
 
     def detect_faces(self, img=None, blob=None) -> list:
         faces = self.detector.detect_faces(img)
         return list(map(lambda face: face['box'], faces))
+
+
+class MPFaceDetector(FaceDetector):
+    def __init__(self):
+        self._mp_face_detection = mp.solutions.face_detection
+        self._face_detection = self._mp_face_detection.FaceDetection(min_detection_confidence=0.4)
+        self._mp_drawing = mp.solutions.drawing_utils
+
+    def detect_faces(self, img=None, blob=None) -> list:
+        res = []
+        with self._mp_face_detection.FaceDetection(min_detection_confidence=0.6) as face_detection:
+            results = face_detection.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+            if results.detections:
+                for detection in results.detections:
+                    # self._mp_drawing.draw_detection(img, detection)
+                    # print(detection)
+                    xmin = detection.location_data.relative_bounding_box.xmin
+                    ymin = detection.location_data.relative_bounding_box.ymin
+                    width = detection.location_data.relative_bounding_box.width
+                    height = detection.location_data.relative_bounding_box.height
+
+                    # xmin = xmin - width * 0.1
+                    # ymin = ymin - height * 0.1
+                    # width = width + width * 0.2
+                    # height = height + height * 0.2
+
+                    left = int(xmin * (img.shape[1] - 1))
+                    top = int(ymin * (img.shape[0] - 1))
+                    width = int(width * (img.shape[1] - 1))
+                    height = int(height * (img.shape[0] - 1))
+
+                    res.append([left, top, width, height])
+        return res
 
 
 yolo_model_path = './yolo3_tiny/face-yolov3-tiny.cfg'
