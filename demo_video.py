@@ -34,6 +34,8 @@ class VideoDemo:
             i = i + 1
             ret, frame = cap.read()
 
+            cap.set(cv2.CAP_PROP_FPS, 1)
+
             # Stop the program if reached end of video
             if not ret:
                 print('[i] ==> Done processing!!!')
@@ -128,4 +130,4 @@ if len(args) > 0:
 camera = VideoDemo(model=None, detector=detector, preprocessor=proc)
 # camera.process_video('demo_data/Friends.mp4', False)
 
-camera.process_video('demo_data/selfie.mp4', False)
+camera.process_video('demo_data/smiling.mp4', False)

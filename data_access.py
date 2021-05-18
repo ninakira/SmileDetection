@@ -6,6 +6,7 @@ from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 AUTOTUNE = tf.data.AUTOTUNE
 
+
 class ImageDaoKeras:
     def __init__(self, data_path=None,
                  train_path=None,
@@ -43,9 +44,9 @@ class ImageDaoKeras:
         )
 
     def load_data(self):
-        train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
-        validation_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
-        return train_dataset, validation_dataset
+        self.train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
+        self.valid_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
+        return self.train_dataset, self.valid_dataset
 
 
 class ImageDaoKerasBigData:
@@ -82,9 +83,41 @@ class ImageDaoKerasBigData:
         )
 
     def load_data(self):
-        train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
-        validation_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
-        return train_dataset, validation_dataset
+        self.train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
+        self.valid_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
+        return self.train_dataset, self.valid_dataset
+
+
+def merged_dataset(data_path1, data_path2):
+    data1 = ImageDaoKeras(train_path=f'{data_path1}/train',
+                          validation_path=f'{data_path1}/validation')
+    data2 = ImageDaoKeras(train_path=f'{data_path2}/train',
+                          validation_path=f'{data_path2}/validation')
+
+    train_data = MergedDataGen(data1.train_dataset.as_numpy_iterator(),
+                               data2.train_dataset.as_numpy_iterator())
+    valid_data = MergedDataGen(data1.valid_dataset.as_numpy_iterator(),
+                               data2.valid_dataset.as_numpy_iterator())
+
+    return train_data.generate(), valid_data.generate()
+
+
+class MergedDataGen:
+    def __init__(self, *gens):
+        self.gens = gens
+        self.toggle = 0
+
+    def generate(self):
+        while True:
+            try:
+                i = self.toggle
+                self.toggle = (self.toggle + 1) % len(self.gens)
+                yield next(self.gens[i])
+            except StopIteration:
+                break
+
+    def __len__(self):
+        return sum([len(g) for g in self.gens])
 
 
 class DataExtractor:
@@ -145,3 +178,8 @@ def load_genki_test(batch_size=128, img_size=(128, 128)):
     test_dataset = test_dataset.prefetch(buffer_size=AUTOTUNE)
 
     return test_dataset
+
+
+#
+# train_data, valid_data = merged_dataset('test-images/test1', 'test-images/test2')
+#
