@@ -6,7 +6,7 @@ This is the Smile/Emotion Detection Project repository.
 
 Install the environment with
 ```
-conda env create -f smile_requirements.yml
+conda create --name SmileEnvironment --file smile_requirements.txt
 ```
 Activate the environment
 ```
