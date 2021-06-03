@@ -106,7 +106,7 @@ def compute_detector_time(detector, size=(128, 128)):
 
 
 
-path = './tf_logs/FINAL_Unet/SavedModel/SavedModel/0'
+path = 'saved_model/USmile/SavedModel/0'
 mp = MPFaceDetector()
 
 model = tf.keras.models.load_model(path)

@@ -110,7 +110,7 @@ detector = mp
 # model_path = 'tf_logs/Mobilenet_Small1/checkpoints/1/1/cp-0019-0.21.ckpt'
 # model = load_model(model_path)
 
-model_path = './tf_logs/FINAL_Unet/SavedModel/SavedModel/0'
+model_path = 'saved_model/USmile/SavedModel/0'
 model = load_model(model_path)
 
 args = sys.argv[1:]
