@@ -44,9 +44,9 @@ class ImageDaoKeras:
         )
 
     def load_data(self):
-        self.train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
-        self.valid_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
-        return self.train_dataset, self.valid_dataset
+        train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
+        validation_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
+        return train_dataset, validation_dataset
 
 
 class ImageDaoKerasBigData:
@@ -83,41 +83,9 @@ class ImageDaoKerasBigData:
         )
 
     def load_data(self):
-        self.train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
-        self.valid_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
-        return self.train_dataset, self.valid_dataset
-
-
-def merged_dataset(data_path1, data_path2):
-    data1 = ImageDaoKeras(train_path=f'{data_path1}/train',
-                          validation_path=f'{data_path1}/validation')
-    data2 = ImageDaoKeras(train_path=f'{data_path2}/train',
-                          validation_path=f'{data_path2}/validation')
-
-    train_data = MergedDataGen(data1.train_dataset.as_numpy_iterator(),
-                               data2.train_dataset.as_numpy_iterator())
-    valid_data = MergedDataGen(data1.valid_dataset.as_numpy_iterator(),
-                               data2.valid_dataset.as_numpy_iterator())
-
-    return train_data.generate(), valid_data.generate()
-
-
-class MergedDataGen:
-    def __init__(self, *gens):
-        self.gens = gens
-        self.toggle = 0
-
-    def generate(self):
-        while True:
-            try:
-                i = self.toggle
-                self.toggle = (self.toggle + 1) % len(self.gens)
-                yield next(self.gens[i])
-            except StopIteration:
-                break
-
-    def __len__(self):
-        return sum([len(g) for g in self.gens])
+        train_dataset = self.train_dataset.prefetch(buffer_size=AUTOTUNE)
+        validation_dataset = self.valid_dataset.prefetch(buffer_size=AUTOTUNE)
+        return train_dataset, validation_dataset
 
 
 class DataExtractor:
@@ -132,8 +100,11 @@ class DataExtractor:
             name = os.path.basename(path).split('.')[0]
             zip_ref.extractall(str(path.parent) + "/unzipped_" + name)
 
-TRAIN_PATH = "/data/celeba/final_celeba/train"
-VALIDATION_PATH = "/data/celeba/final_celeba/validation"
+
+TRAIN_PATH_CELEBA = "/data/celeba/final_celeba/train"
+VALIDATION_PATH_CELEBA = "/data/celeba/final_celeba/validation"
+TRAIN_PATH_MIXED = '/data/mixed_celeba_affect/train'
+VALIDATION_PATH_MIXED = '/data/mixed_celeba_affect/validation'
 
 TEST_PATH_CELEBA = "/data/celeba/final_celeba/test"
 TEST_PATH_GENKI = "/data/genki/face_detected_genki"
@@ -141,13 +112,30 @@ TEST_PATH_GENKI = "/data/genki/face_detected_genki"
 IMG_SIZE = (128, 128)
 
 
-def load_celeba(batch_size=128, img_size=IMG_SIZE):
-    train_dataset = image_dataset_from_directory(TRAIN_PATH,
+def load_celeba(batch_size=64, img_size=IMG_SIZE):
+    train_dataset = image_dataset_from_directory(TRAIN_PATH_CELEBA,
                                                  shuffle=True,
                                                  batch_size=batch_size,
                                                  image_size=img_size)
 
-    validation_dataset = image_dataset_from_directory(VALIDATION_PATH,
+    validation_dataset = image_dataset_from_directory(VALIDATION_PATH_CELEBA,
+                                                      shuffle=True,
+                                                      batch_size=batch_size,
+                                                      image_size=img_size)
+
+    train_dataset = train_dataset.prefetch(buffer_size=AUTOTUNE)
+    validation_dataset = validation_dataset.prefetch(buffer_size=AUTOTUNE)
+
+    return train_dataset, validation_dataset
+
+
+def load_mixed(batch_size=64, img_size=IMG_SIZE):
+    train_dataset = image_dataset_from_directory(TRAIN_PATH_MIXED,
+                                                 shuffle=True,
+                                                 batch_size=batch_size,
+                                                 image_size=img_size)
+
+    validation_dataset = image_dataset_from_directory(VALIDATION_PATH_MIXED,
                                                       shuffle=True,
                                                       batch_size=batch_size,
                                                       image_size=img_size)
@@ -178,8 +166,3 @@ def load_genki_test(batch_size=128, img_size=(128, 128)):
     test_dataset = test_dataset.prefetch(buffer_size=AUTOTUNE)
 
     return test_dataset
-
-
-#
-# train_data, valid_data = merged_dataset('test-images/test1', 'test-images/test2')
-#

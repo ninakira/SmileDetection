@@ -18,7 +18,7 @@ class HaarCascadeDetector(FaceDetector):
         self.detector = cv2.CascadeClassifier('demo_data/Haarcascades/haarcascade_frontalface_default.xml')
 
     def detect_faces(self, img=None, blob=None) -> list:
-        return self.detector.detectMultiScale(img, 1.3, 6)
+        return self.detector.detectMultiScale(img, 1.2, 8)
 
 
 class DlibHAGDetector(FaceDetector):

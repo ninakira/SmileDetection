@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 IMG_WIDTH = 416
 IMG_HEIGHT = 416
@@ -12,6 +13,10 @@ COLOR_GREEN = (0, 255, 0)
 COLOR_RED = (0, 0, 255)
 COLOR_WHITE = (255, 255, 255)
 COLOR_YELLOW = (0, 255, 255)
+
+
+def get_pred_color(pred):
+    return COLOR_GREEN if pred >= 0.5 else COLOR_WHITE
 
 
 def refined_box(left, top, width, height):
@@ -43,4 +48,8 @@ def draw_predict(frame, left, top, right, bottom, conf=None):
 
         top = max(top, label_size[1])
         cv2.putText(frame, text, (left, top - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.4,
-                    COLOR_WHITE, 1)
+                    get_pred_color(conf), 1)
+
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))

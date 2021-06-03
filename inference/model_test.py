@@ -45,5 +45,5 @@ def test_model(model, img_size=(128, 128), model_name=None):
 
 if __name__ == "__main__":
     set_dynamic_memory_allocation()
-    model = load_model_by_checkpoint('MNasNet1', 'cp-0010-0.20.ckpt')
+    model = load_model_by_checkpoint('Mobilenet_Small4_retrain6', 'cp-0016-0.06.ckpt')
     test_model(model)
