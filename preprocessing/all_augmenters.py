@@ -24,9 +24,8 @@ def augmenter_after_face_detection(image):
             A.RandomBrightnessContrast(),
         ], p=0.3),
         A.HueSaturationValue(p=0.2, hue_shift_limit=10),
-        A.GaussNoise(p=0.2),
     ])
     tr = transform(image=image)
     image = tr['image']
-    print(tr['replay'])
+    # print(tr['replay'])
     return image

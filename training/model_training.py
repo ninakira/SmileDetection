@@ -87,6 +87,7 @@ class KerasTrain:
         return tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_path,
             verbose=1,
+            save_best_only=True,
             save_weights_only=save_weights_only,
             save_freq='epoch')
 
