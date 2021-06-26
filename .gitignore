@@ -139,3 +139,9 @@ dmypy.json
 tf_logs
 
 test-images
+
+yoloface
+
+*.weights
+
+map

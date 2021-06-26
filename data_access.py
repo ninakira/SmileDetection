@@ -6,6 +6,7 @@ from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 AUTOTUNE = tf.data.AUTOTUNE
 
+
 class ImageDaoKeras:
     def __init__(self, data_path=None,
                  train_path=None,
@@ -99,8 +100,11 @@ class DataExtractor:
             name = os.path.basename(path).split('.')[0]
             zip_ref.extractall(str(path.parent) + "/unzipped_" + name)
 
-TRAIN_PATH = "/data/celeba/final_celeba/train"
-VALIDATION_PATH = "/data/celeba/final_celeba/validation"
+
+TRAIN_PATH_CELEBA = "/data/celeba/final_celeba/train"
+VALIDATION_PATH_CELEBA = "/data/celeba/final_celeba/validation"
+TRAIN_PATH_MIXED = '/data/mixed_celeba_affect/train'
+VALIDATION_PATH_MIXED = '/data/mixed_celeba_affect/validation'
 
 TEST_PATH_CELEBA = "/data/celeba/final_celeba/test"
 TEST_PATH_GENKI = "/data/genki/face_detected_genki"
@@ -109,12 +113,12 @@ IMG_SIZE = (128, 128)
 
 
 def load_celeba(batch_size=64, img_size=IMG_SIZE):
-    train_dataset = image_dataset_from_directory(TRAIN_PATH,
+    train_dataset = image_dataset_from_directory(TRAIN_PATH_MIXED,
                                                  shuffle=True,
                                                  batch_size=batch_size,
                                                  image_size=img_size)
 
-    validation_dataset = image_dataset_from_directory(VALIDATION_PATH,
+    validation_dataset = image_dataset_from_directory(VALIDATION_PATH_MIXED,
                                                       shuffle=True,
                                                       batch_size=batch_size,
                                                       image_size=img_size)

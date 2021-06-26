@@ -61,7 +61,7 @@ class KerasTrain:
             epochs=epochs,
             initial_epoch=initial_epoch,
             callbacks=callbacks,
-            validation_data=self.valid_data,
+            validation_data=self.valid_data
         )
 
         self.histories.append(history)
@@ -81,7 +81,7 @@ class KerasTrain:
                                                 restore_best_weights=True)
 
     def __get_cp_callback(self, save_weights_only=False):
-        checkpoint_name = 'cp-{epoch:04d}-{val_loss:.2f}.ckpt'
+        checkpoint_name = 'cp-{epoch:04d}.ckpt'
         checkpoint_path = f'{self.cp_dir}/{self.current_fit}/{checkpoint_name}'
 
         return tf.keras.callbacks.ModelCheckpoint(

@@ -5,8 +5,9 @@ from model_training import KerasTrain
 
 sys.path.append('../')
 import models.EfficientNet
-from inference.model_test import test_model
-from inference.model_load import load_saved_model
+from data_access import merged_dataset
+# from inference.model_test import test_model
+# from inference.model_load import load_saved_model
 
 
 class EfficientNetTrainer:
@@ -77,8 +78,8 @@ IMG_SIZE = (224, 224)
 #                                       fine_tune_epochs=10,
 #                                       fine_tune_lr=1e-5)
 
-model = load_saved_model('EfficientNet_b0_celeba', 1)
-test_model(model, img_size=IMG_SIZE, model_name='EfficientNet_b0_celeba')
+# model = load_saved_model('EfficientNet_b0_celeba', 1)
+# test_model(model, img_size=IMG_SIZE, model_name='EfficientNet_b0_celeba')
 
 
 # efficient_net = models.EfficientNet.EfficientNetV0()
@@ -87,3 +88,14 @@ test_model(model, img_size=IMG_SIZE, model_name='EfficientNet_b0_celeba')
 # model.compile(op, tf.keras.losses.BinaryCrossentropy(True), ["accuracy"])
 # model.load_weights("../tf_logs/EfficientNet_only_finetuning2_final_celeba/checkpoints/cp-0003-0.18.ckpt")
 # model.save("SAVED/EFF/")
+
+
+
+train_data, valid_data = merged_dataset('../test-images/test1', '../test-images/test2')
+efficient_net_trainer = EfficientNetTrainer(train_data, valid_data)
+efficient_net_trainer.train_new_model(name="EfficientNet_b0_celeba",
+                                      frozen_epochs=10,
+                                      frozen_lr=1e-3,
+                                      fine_tune_epochs=10,
+                                      fine_tune_lr=1e-5)
+
